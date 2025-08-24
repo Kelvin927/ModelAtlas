@@ -1,51 +1,45 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List, Optional
 import json
-from pathlib import Path
+import os
 
-app = FastAPI(title="Model Handbook API")
+app = FastAPI()
 
-# Allow frontend requests (localhost:3000 / 3001)
+# Enable CORS for frontend (Next.js)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 或者 ["http://localhost:3000", "http://localhost:3001"]
+    allow_origins=["*"],  # You can restrict this to your frontend domain later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "models.json"
+# Path to the JSON dataset
+DATA_PATH = os.path.join(os.path.dirname(__file__), "../data/models.json")
 
-class ModelItem(BaseModel):
-    id: str
-    name: str
-    category: str
-    tags: List[str]
-    summary: str
-    latex: Optional[str] = None
-    python_snippet: Optional[str] = None
-
-def load_data():
-    if DATA_FILE.exists():
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
+# Utility function to load models from JSON
+def load_models():
+    try:
+        with open(DATA_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
-    return []
+    except Exception as e:
+        print("Error loading models.json:", e)
+        return []
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to ModelAtlas API"}
 
 @app.get("/models")
-def list_models(q: Optional[str] = None, category: Optional[str] = None):
-    models = load_data()
-    if q:
-        models = [m for m in models if q.lower() in m["name"].lower() or q.lower() in m["summary"].lower()]
-    if category:
-        models = [m for m in models if m["category"].lower() == category.lower()]
-    return models
+def get_models():
+    """Return all models from the dataset"""
+    return load_models()
 
-@app.get("/models/{mid}")
-def get_model(mid: str):
-    models = load_data()
-    for m in models:
-        if m["id"] == mid:
-            return m
-    raise HTTPException(404, "Model not found")
+@app.get("/models/{model_id}")
+def get_model(model_id: str):
+    """Return a single model by ID"""
+    models = load_models()
+    for model in models:
+        if model.get("id") == model_id:
+            return model
+    return {"error": "Model not found"}

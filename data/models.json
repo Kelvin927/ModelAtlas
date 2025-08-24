@@ -3,60 +3,45 @@
     "id": "linear-regression",
     "name": "Linear Regression",
     "category": "Prediction",
-    "tags": [
-      "regression",
-      "least squares"
-    ],
+    "tags": ["regression", "least squares"],
     "summary": "Fits a linear relationship y = ax + b using least squares.",
-    "latex": "min_{a,b} sum (y_i - a x_i - b)^2",
-    "python_snippet": "import numpy as np\\nX = np.c_[np.ones(n), x]\\ncoef = np.linalg.lstsq(X, y, rcond=None)[0]"
+    "formula": "y = \\beta_0 + \\beta_1 x + \\varepsilon",
+    "code": "import numpy as np\\nfrom sklearn.linear_model import LinearRegression\\nX = np.array([[1],[2],[3]])\\ny = np.array([2,4,6])\\nmodel = LinearRegression().fit(X,y)\\nprint(model.coef_, model.intercept_)"
   },
   {
     "id": "logistic-regression",
     "name": "Logistic Regression",
     "category": "Classification",
-    "tags": [
-      "classification",
-      "sigmoid"
-    ],
-    "summary": "Models binary outcome variables using the logistic function.",
-    "latex": "P(y=1|x) = 1/(1+exp(-(b0+b1 x)))",
-    "python_snippet": "from sklearn.linear_model import LogisticRegression\\nmodel = LogisticRegression().fit(X, y)"
+    "tags": ["classification", "probability"],
+    "summary": "Models binary outcomes using the logistic function.",
+    "formula": "P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}",
+    "code": "from sklearn.linear_model import LogisticRegression\\nX = [[0],[1],[2],[3]]\\ny = [0,0,1,1]\\nmodel = LogisticRegression().fit(X,y)\\nprint(model.predict([[1.5]]))"
   },
   {
     "id": "ahp",
-    "name": "AHP (Analytic Hierarchy Process)",
-    "category": "Evaluation",
-    "tags": [
-      "decision",
-      "multi-criteria"
-    ],
-    "summary": "Derives weights for criteria based on pairwise comparisons.",
-    "latex": "w_i = (prod_j a_ij)^(1/n) / sum_k (prod_j a_kj)^(1/n)",
-    "python_snippet": "import numpy as np\\nA = np.array([[1,3],[1/3,1]])\\nw = np.prod(A, axis=1)**(1/A.shape[0])\\nw /= w.sum()"
+    "name": "Analytic Hierarchy Process (AHP)",
+    "category": "Decision Making",
+    "tags": ["multi-criteria", "pairwise comparison"],
+    "summary": "Derives weights for decision making via pairwise comparison matrices.",
+    "formula": "\\text{Compute eigenvector of pairwise comparison matrix } A \\text{ to derive weights.}",
+    "code": "import numpy as np\\nfrom numpy.linalg import eig\\nA = np.array([[1, 2],[0.5, 1]])\\nvals, vecs = eig(A)\\nweights = vecs[:,0].real\\nprint(weights / weights.sum())"
   },
   {
     "id": "topsis",
     "name": "TOPSIS",
-    "category": "Evaluation",
-    "tags": [
-      "ranking",
-      "multi-criteria"
-    ],
-    "summary": "Ranks alternatives based on distance to ideal and anti-ideal solutions.",
-    "latex": "C_i = D_i^- / (D_i^+ + D_i^-)",
-    "python_snippet": "# Normalize, weight, find ideal/anti-ideal, compute distances"
+    "category": "Decision Making",
+    "tags": ["multi-criteria", "ranking"],
+    "summary": "Technique for Order Preference by Similarity to Ideal Solution.",
+    "formula": "C_i^* = \\frac{D_i^-}{D_i^+ + D_i^-}, \\quad D_i^+ = \\sqrt{\\sum_j (v_{ij}-v_j^+)^2}, \\; D_i^- = \\sqrt{\\sum_j (v_{ij}-v_j^-)^2}",
+    "code": "import numpy as np\\nX = np.array([[7,9,9],[9,7,8],[8,8,7]])\\n# Normalize\\nR = X / np.sqrt((X**2).sum(axis=0))\\n# Weights (equal)\\nw = np.array([1/3,1/3,1/3])\\nV = R*w\\nideal_best = V.max(axis=0)\\nideal_worst = V.min(axis=0)\\nD_pos = np.linalg.norm(V-ideal_best,axis=1)\\nD_neg = np.linalg.norm(V-ideal_worst,axis=1)\\nscore = D_neg / (D_pos+D_neg)\\nprint(score)"
   },
   {
-    "id": "sir",
-    "name": "SIR Model",
+    "id": "sir-model",
+    "name": "SIR Epidemic Model",
     "category": "Simulation",
-    "tags": [
-      "epidemic",
-      "ODE"
-    ],
-    "summary": "Simulates infectious disease spread using compartments.",
-    "latex": "dS/dt = -\u03b2SI, dI/dt = \u03b2SI - \u03b3I, dR/dt = \u03b3I",
-    "python_snippet": "from scipy.integrate import solve_ivp"
+    "tags": ["epidemiology", "differential equations"],
+    "summary": "Simulates the spread of infectious diseases in a population.",
+    "formula": "\\frac{dS}{dt} = -\\beta SI, \\quad \\frac{dI}{dt} = \\beta SI - \\gamma I, \\quad \\frac{dR}{dt} = \\gamma I",
+    "code": "import numpy as np\\nimport matplotlib.pyplot as plt\\n\\n# Parameters\\nN=1000; beta=0.3; gamma=0.1; I0=1; R0=0; S0=N-I0-R0\\n\\nt = np.linspace(0,160,160)\\nS,I,R=[S0],[I0],[R0]\\n\\nfor _ in t[1:]:\\n    S_new = S[-1] - beta*S[-1]*I[-1]/N\\n    I_new = I[-1] + beta*S[-1]*I[-1]/N - gamma*I[-1]\\n    R_new = R[-1] + gamma*I[-1]\\n    S.append(S_new); I.append(I_new); R.append(R_new)\\n\\nplt.plot(t,S,label='S')\\nplt.plot(t,I,label='I')\\nplt.plot(t,R,label='R')\\nplt.legend(); plt.show()"
   }
 ]
