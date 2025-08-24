@@ -1,4 +1,5 @@
 # ModelAtlas 🌍
+
 *A comprehensive knowledge base of statistical & mathematical models with formulas, code, and interactive demos.*
 
 ---
@@ -22,7 +23,8 @@ It provides **formulas, Python code snippets, application notes, and interactive
 ---
 
 ## Project Structure
-```
+
+```text
 ModelAtlas/
 ├── frontend/          # Next.js frontend (React + Tailwind)
 ├── backend/           # FastAPI backend (Python 3.13)
@@ -36,24 +38,29 @@ ModelAtlas/
 ## Getting Started
 
 ### Backend (FastAPI)
+
 ```bash
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
+
 Open: [http://127.0.0.1:8000/models](http://127.0.0.1:8000/models)
 
 ### Frontend (Next.js)
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+
 Open: [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## Example Models
+
 - Linear Regression  
 - Logistic Regression  
 - Analytic Hierarchy Process (AHP)  
@@ -63,12 +70,14 @@ Open: [http://localhost:3000](http://localhost:3000)
 ---
 
 ## Deployment
+
 - Frontend → [Vercel](https://vercel.com/)  
 - Backend → [Render](https://render.com/) / [Fly.io](https://fly.io/) / Docker  
 
 ---
 
 ## Roadmap
+
 - [ ] Add more models (50+ common and advanced methods)  
 - [ ] LaTeX export for modeling paper sections  
 - [ ] User accounts (favorites, notes, contributions)  
@@ -77,9 +86,11 @@ Open: [http://localhost:3000](http://localhost:3000)
 ---
 
 ## Contributing
+
 Contributions are welcome! Add new models, improve code, or create interactive demos.
 
 ---
 
 ## License
+
 MIT License © 2025 ModelAtlas Contributors
