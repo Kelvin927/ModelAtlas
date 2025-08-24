@@ -1,45 +1,37 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
 
 app = FastAPI()
 
-# Enable CORS for frontend (Next.js)
+# Enable CORS (allow frontend requests from localhost:3000 etc.)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this to your frontend domain later
+    allow_origins=["*"],  # allow all origins (you can restrict later)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Path to the JSON dataset
-DATA_PATH = os.path.join(os.path.dirname(__file__), "../data/models.json")
+# Load models.json
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "../data/models.json")
 
-# Utility function to load models from JSON
-def load_models():
-    try:
-        with open(DATA_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print("Error loading models.json:", e)
-        return []
+with open(DATA_PATH, "r", encoding="utf-8") as f:
+    models = json.load(f)
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to ModelAtlas API"}
+    return {"message": "ModelAtlas API is running!"}
 
 @app.get("/models")
 def get_models():
-    """Return all models from the dataset"""
-    return load_models()
+    return models
 
 @app.get("/models/{model_id}")
-def get_model(model_id: str):
-    """Return a single model by ID"""
-    models = load_models()
+def get_model(model_id: int):
     for model in models:
-        if model.get("id") == model_id:
+        if model["id"] == model_id:
             return model
-    return {"error": "Model not found"}
+    raise HTTPException(status_code=404, detail="Model not found")

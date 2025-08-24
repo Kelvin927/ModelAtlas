@@ -93,6 +93,24 @@ export default function HomePage() {
     setJumpPage("");
   };
 
+  // Generate pagination buttons with ellipsis
+  const getPagination = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+      }
+    }
+    return pages;
+  };
+
   return (
     <div className="p-4">
       {loading ? (
@@ -159,21 +177,27 @@ export default function HomePage() {
           {/* Pagination controls */}
           {totalPages > 1 && (
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-              {/* Numbered pagination */}
+              {/* Numbered pagination with ellipsis */}
               <div className="flex gap-2 flex-wrap">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-4 py-2 border rounded-lg ${
-                      page === currentPage
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                {getPagination().map((p, idx) =>
+                  typeof p === "number" ? (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentPage(p)}
+                      className={`px-4 py-2 border rounded-lg ${
+                        p === currentPage
+                          ? "bg-blue-500 text-white"
+                          : "bg-white text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ) : (
+                    <span key={idx} className="px-4 py-2 text-gray-500">
+                      {p}
+                    </span>
+                  )
+                )}
               </div>
 
               {/* Jump to page input */}

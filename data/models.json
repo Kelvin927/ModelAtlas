@@ -1,47 +1,247 @@
 [
   {
-    "id": "linear-regression",
+    "id": 1,
     "name": "Linear Regression",
-    "category": "Prediction",
-    "tags": ["regression", "least squares"],
-    "summary": "Fits a linear relationship y = ax + b using least squares.",
-    "formula": "y = \\beta_0 + \\beta_1 x + \\varepsilon",
-    "code": "import numpy as np\\nfrom sklearn.linear_model import LinearRegression\\nX = np.array([[1],[2],[3]])\\ny = np.array([2,4,6])\\nmodel = LinearRegression().fit(X,y)\\nprint(model.coef_, model.intercept_)"
+    "category": "Regression",
+    "description": "Models a linear relationship between dependent and independent variables using Ordinary Least Squares (OLS).",
+    "formula": "\\hat{\\beta} = (X^\\top X)^{-1} X^\\top y, \\quad \\hat{y} = X\\hat{\\beta}",
+    "example": "from sklearn.linear_model import LinearRegression\nimport numpy as np\nX = np.array([[1],[2],[3],[4],[5]])\ny = np.array([1.2, 2.4, 2.9, 4.2, 5.1])\nmodel = LinearRegression().fit(X,y)\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
+    "tags": [
+      "regression",
+      "ols",
+      "supervised"
+    ]
   },
   {
-    "id": "logistic-regression",
+    "id": 2,
     "name": "Logistic Regression",
     "category": "Classification",
-    "tags": ["classification", "probability"],
-    "summary": "Models binary outcomes using the logistic function.",
-    "formula": "P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}",
-    "code": "from sklearn.linear_model import LogisticRegression\\nX = [[0],[1],[2],[3]]\\ny = [0,0,1,1]\\nmodel = LogisticRegression().fit(X,y)\\nprint(model.predict([[1.5]]))"
+    "description": "Models binary outcomes using the logistic (sigmoid) function.",
+    "formula": "P(y=1|x) = \\frac{1}{1 + e^{-w^Tx}}",
+    "example": "from sklearn.linear_model import LogisticRegression\nimport numpy as np\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\nmodel = LogisticRegression().fit(X,y)\nprint('coef=', model.coef_)",
+    "tags": [
+      "classification",
+      "sigmoid"
+    ]
   },
   {
-    "id": "ahp",
-    "name": "Analytic Hierarchy Process (AHP)",
-    "category": "Decision Making",
-    "tags": ["multi-criteria", "pairwise comparison"],
-    "summary": "Derives weights for decision making via pairwise comparison matrices.",
-    "formula": "\\text{Compute eigenvector of pairwise comparison matrix } A \\text{ to derive weights.}",
-    "code": "import numpy as np\\nfrom numpy.linalg import eig\\nA = np.array([[1, 2],[0.5, 1]])\\nvals, vecs = eig(A)\\nweights = vecs[:,0].real\\nprint(weights / weights.sum())"
+    "id": 3,
+    "name": "Ridge Regression",
+    "category": "Regression",
+    "description": "Adds L2 regularization to linear regression to prevent overfitting.",
+    "formula": "\\hat{\\beta} = (X^\\top X + \\alpha I)^{-1} X^\\top y",
+    "example": "from sklearn.linear_model import Ridge\nimport numpy as np\nX = np.array([[1],[2],[3],[4]])\ny = np.array([1,2,3,4])\nmodel = Ridge(alpha=1.0).fit(X,y)\nprint('coef=', model.coef_)",
+    "tags": [
+      "regression",
+      "ridge",
+      "regularization"
+    ]
   },
   {
-    "id": "topsis",
-    "name": "TOPSIS",
-    "category": "Decision Making",
-    "tags": ["multi-criteria", "ranking"],
-    "summary": "Technique for Order Preference by Similarity to Ideal Solution.",
-    "formula": "C_i^* = \\frac{D_i^-}{D_i^+ + D_i^-}, \\quad D_i^+ = \\sqrt{\\sum_j (v_{ij}-v_j^+)^2}, \\; D_i^- = \\sqrt{\\sum_j (v_{ij}-v_j^-)^2}",
-    "code": "import numpy as np\\nX = np.array([[7,9,9],[9,7,8],[8,8,7]])\\n# Normalize\\nR = X / np.sqrt((X**2).sum(axis=0))\\n# Weights (equal)\\nw = np.array([1/3,1/3,1/3])\\nV = R*w\\nideal_best = V.max(axis=0)\\nideal_worst = V.min(axis=0)\\nD_pos = np.linalg.norm(V-ideal_best,axis=1)\\nD_neg = np.linalg.norm(V-ideal_worst,axis=1)\\nscore = D_neg / (D_pos+D_neg)\\nprint(score)"
+    "id": 4,
+    "name": "Lasso Regression",
+    "category": "Regression",
+    "description": "Adds L1 regularization, encouraging sparsity in coefficients.",
+    "formula": "\\hat{\\beta} = \\arg\\min_{\\beta} \\frac{1}{2n} ||y - X\\beta||_2^2 + \\alpha||\\beta||_1",
+    "example": "from sklearn.linear_model import Lasso\nimport numpy as np\nX = np.random.randn(80,20)\ny = np.random.randn(80)\nmodel = Lasso(alpha=0.05).fit(X,y)\nprint('nonzero=', (model.coef_!=0).sum())",
+    "tags": [
+      "regression",
+      "lasso",
+      "feature-selection"
+    ]
   },
   {
-    "id": "sir-model",
-    "name": "SIR Epidemic Model",
-    "category": "Simulation",
-    "tags": ["epidemiology", "differential equations"],
-    "summary": "Simulates the spread of infectious diseases in a population.",
-    "formula": "\\frac{dS}{dt} = -\\beta SI, \\quad \\frac{dI}{dt} = \\beta SI - \\gamma I, \\quad \\frac{dR}{dt} = \\gamma I",
-    "code": "import numpy as np\\nimport matplotlib.pyplot as plt\\n\\n# Parameters\\nN=1000; beta=0.3; gamma=0.1; I0=1; R0=0; S0=N-I0-R0\\n\\nt = np.linspace(0,160,160)\\nS,I,R=[S0],[I0],[R0]\\n\\nfor _ in t[1:]:\\n    S_new = S[-1] - beta*S[-1]*I[-1]/N\\n    I_new = I[-1] + beta*S[-1]*I[-1]/N - gamma*I[-1]\\n    R_new = R[-1] + gamma*I[-1]\\n    S.append(S_new); I.append(I_new); R.append(R_new)\\n\\nplt.plot(t,S,label='S')\\nplt.plot(t,I,label='I')\\nplt.plot(t,R,label='R')\\nplt.legend(); plt.show()"
+    "id": 5,
+    "name": "Decision Tree",
+    "category": "Classification/Regression",
+    "description": "Tree-based model splitting data by features to minimize impurity.",
+    "formula": "Choose split s that minimizes impurity: \\; Gini = 1-\\sum p_i^2",
+    "example": "from sklearn.tree import DecisionTreeClassifier\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = DecisionTreeClassifier().fit(X,y)\nprint(model.predict([[1,1]]))",
+    "tags": [
+      "tree",
+      "nonlinear",
+      "classification"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Random Forest",
+    "category": "Ensemble",
+    "description": "Ensemble of decision trees using bagging and feature randomness.",
+    "formula": "\\hat{f}(x) = \\frac{1}{B} \\sum_{b=1}^B T_b(x)",
+    "example": "from sklearn.ensemble import RandomForestClassifier\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = RandomForestClassifier(n_estimators=10).fit(X,y)\nprint(model.predict([[1,1]]))",
+    "tags": [
+      "ensemble",
+      "bagging",
+      "tree"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Gradient Boosting (GBDT)",
+    "category": "Ensemble",
+    "description": "Boosting ensemble where each tree corrects the errors of previous ones.",
+    "formula": "F_m(x) = F_{m-1}(x) + \\nu h_m(x)",
+    "example": "from sklearn.ensemble import GradientBoostingRegressor\nimport numpy as np\nX = np.array([[1],[2],[3],[4]])\ny = np.array([1.2,1.9,3.2,4.1])\nmodel = GradientBoostingRegressor().fit(X,y)\nprint(model.predict([[2.5]]))",
+    "tags": [
+      "boosting",
+      "ensemble"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "XGBoost",
+    "category": "Ensemble",
+    "description": "Efficient and scalable gradient boosting implementation.",
+    "formula": "Obj = \\sum l(y_i, \\hat{y}_i) + \\sum \\Omega(f_k)",
+    "example": "from xgboost import XGBClassifier\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = XGBClassifier().fit(X,y)\nprint(model.predict([[1,0]]))",
+    "tags": [
+      "xgboost",
+      "boosting"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "LightGBM",
+    "category": "Ensemble",
+    "description": "Gradient boosting framework optimized for speed and memory.",
+    "formula": "Obj = \\sum l(y_i, \\hat{y}_i) + \\sum \\Omega(f_k)",
+    "example": "from lightgbm import LGBMClassifier\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = LGBMClassifier().fit(X,y)\nprint(model.predict([[1,0]]))",
+    "tags": [
+      "lightgbm",
+      "boosting"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Support Vector Machine (SVM)",
+    "category": "Classification",
+    "description": "Finds hyperplane maximizing margin between classes.",
+    "formula": "\\min_w ||w||^2 \\; s.t. \\; y_i(w^Tx_i+b) \\geq 1",
+    "example": "from sklearn.svm import SVC\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = SVC(kernel='linear').fit(X,y)\nprint(model.predict([[1,1]]))",
+    "tags": [
+      "svm",
+      "classification"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "K-Nearest Neighbors (KNN)",
+    "category": "Classification",
+    "description": "Classifies based on majority class of k nearest neighbors.",
+    "formula": "\\hat{y} = \\arg\\max_v \\sum_{i \\in N_k(x)} 1(y_i=v)",
+    "example": "from sklearn.neighbors import KNeighborsClassifier\nimport numpy as np\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\nmodel = KNeighborsClassifier(n_neighbors=3).fit(X,y)\nprint(model.predict([[1.5]]))",
+    "tags": [
+      "knn",
+      "distance"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Naive Bayes",
+    "category": "Classification",
+    "description": "Probabilistic classifier using Bayes' theorem with independence assumption.",
+    "formula": "P(y|x) = \\frac{P(y) \\prod_i P(x_i|y)}{P(x)}",
+    "example": "from sklearn.naive_bayes import GaussianNB\nimport numpy as np\nX = np.array([[1,2],[2,1],[3,2],[2,3]])\ny = np.array([0,0,1,1])\nmodel = GaussianNB().fit(X,y)\nprint(model.predict([[2,2]]))",
+    "tags": [
+      "bayes",
+      "probabilistic"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "K-Means Clustering",
+    "category": "Clustering",
+    "description": "Unsupervised clustering method minimizing within-cluster variance.",
+    "formula": "\\arg\\min_S \\sum_i ||x_i - \\mu_{S(i)}||^2",
+    "example": "from sklearn.cluster import KMeans\nimport numpy as np\nX = np.array([[1,2],[1,4],[1,0],[10,2],[10,4],[10,0]])\nmodel = KMeans(n_clusters=2).fit(X)\nprint(model.labels_)",
+    "tags": [
+      "clustering",
+      "unsupervised"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "DBSCAN",
+    "category": "Clustering",
+    "description": "Density-based clustering detecting arbitrary shapes.",
+    "formula": "Core: |N_\u03b5(p)| \u2265 MinPts",
+    "example": "from sklearn.cluster import DBSCAN\nimport numpy as np\nX = np.array([[1,2],[2,2],[2,3],[8,7],[8,8],[25,80]])\nmodel = DBSCAN(eps=3, min_samples=2).fit(X)\nprint(model.labels_)",
+    "tags": [
+      "clustering",
+      "density"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Principal Component Analysis (PCA)",
+    "category": "Dimensionality Reduction",
+    "description": "Transforms features into orthogonal components capturing max variance.",
+    "formula": "Z = XW, \\; W = eigenvectors(\\Sigma)",
+    "example": "from sklearn.decomposition import PCA\nimport numpy as np\nX = np.array([[1,2],[3,4],[5,6]])\nmodel = PCA(n_components=1).fit(X)\nprint(model.transform(X))",
+    "tags": [
+      "pca",
+      "dimensionality"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "ARIMA",
+    "category": "Time Series",
+    "description": "Autoregressive Integrated Moving Average for time series forecasting.",
+    "formula": "y_t = c + \\phi_1 y_{t-1} + ... + \\theta_1 \\epsilon_{t-1} + ...",
+    "example": "from statsmodels.tsa.arima.model import ARIMA\nimport numpy as np\nimport pandas as pd\ny = pd.Series([1,2,3,4,5,6,7,8,9])\nmodel = ARIMA(y, order=(1,1,1)).fit()\nprint(model.forecast(1))",
+    "tags": [
+      "time-series",
+      "arima"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "SARIMA",
+    "category": "Time Series",
+    "description": "Seasonal ARIMA adds seasonality to ARIMA.",
+    "formula": "ARIMA(p,d,q)(P,D,Q)_s",
+    "example": "from statsmodels.tsa.statespace.sarimax import SARIMAX\nimport pandas as pd\ny = pd.Series([1,2,3,4,5,6,7,8,9])\nmodel = SARIMAX(y, order=(1,1,1), seasonal_order=(1,1,1,12)).fit()\nprint(model.forecast(1))",
+    "tags": [
+      "time-series",
+      "sarima"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Prophet",
+    "category": "Time Series",
+    "description": "Facebook Prophet for time series forecasting with trend and seasonality.",
+    "formula": "y(t) = g(t) + s(t) + h(t) + \\epsilon_t",
+    "example": "from prophet import Prophet\nimport pandas as pd\ndf = pd.DataFrame({'ds': pd.date_range(start='2020-01-01', periods=10), 'y': range(10)})\nmodel = Prophet().fit(df)\nfuture = model.make_future_dataframe(periods=5)\nforecast = model.predict(future)\nprint(forecast[['ds','yhat']].tail())",
+    "tags": [
+      "prophet",
+      "forecasting"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Hidden Markov Model (HMM)",
+    "category": "Sequence Model",
+    "description": "Probabilistic sequence model with hidden states.",
+    "formula": "P(O, Q) = \\pi_{q1} b_{q1}(o1) \\prod a_{qi,qi+1} b_{qi+1}(oi+1)",
+    "example": "from hmmlearn import hmm\nimport numpy as np\nX = np.array([[0],[1],[2],[1],[0]])\nmodel = hmm.MultinomialHMM(n_components=2).fit(X)\nprint(model.predict([[1],[2],[3]]))",
+    "tags": [
+      "hmm",
+      "sequence"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Neural Network (MLP)",
+    "category": "Deep Learning",
+    "description": "Multi-layer perceptron neural network for regression and classification.",
+    "formula": "a^{(l)} = f(W^{(l)} a^{(l-1)} + b^{(l)})",
+    "example": "from sklearn.neural_network import MLPClassifier\nimport numpy as np\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\nmodel = MLPClassifier(hidden_layer_sizes=(5,), max_iter=500).fit(X,y)\nprint(model.predict([[1,0]]))",
+    "tags": [
+      "mlp",
+      "neural-network"
+    ]
   }
 ]
