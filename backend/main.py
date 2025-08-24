@@ -1,10 +1,20 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import json
 from pathlib import Path
 
 app = FastAPI(title="Model Handbook API")
+
+# Allow frontend requests (localhost:3000 / 3001)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 或者 ["http://localhost:3000", "http://localhost:3001"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "models.json"
 
