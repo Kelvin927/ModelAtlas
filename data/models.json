@@ -1,0 +1,62 @@
+[
+  {
+    "id": "linear-regression",
+    "name": "Linear Regression",
+    "category": "Prediction",
+    "tags": [
+      "regression",
+      "least squares"
+    ],
+    "summary": "Fits a linear relationship y = ax + b using least squares.",
+    "latex": "min_{a,b} sum (y_i - a x_i - b)^2",
+    "python_snippet": "import numpy as np\\nX = np.c_[np.ones(n), x]\\ncoef = np.linalg.lstsq(X, y, rcond=None)[0]"
+  },
+  {
+    "id": "logistic-regression",
+    "name": "Logistic Regression",
+    "category": "Classification",
+    "tags": [
+      "classification",
+      "sigmoid"
+    ],
+    "summary": "Models binary outcome variables using the logistic function.",
+    "latex": "P(y=1|x) = 1/(1+exp(-(b0+b1 x)))",
+    "python_snippet": "from sklearn.linear_model import LogisticRegression\\nmodel = LogisticRegression().fit(X, y)"
+  },
+  {
+    "id": "ahp",
+    "name": "AHP (Analytic Hierarchy Process)",
+    "category": "Evaluation",
+    "tags": [
+      "decision",
+      "multi-criteria"
+    ],
+    "summary": "Derives weights for criteria based on pairwise comparisons.",
+    "latex": "w_i = (prod_j a_ij)^(1/n) / sum_k (prod_j a_kj)^(1/n)",
+    "python_snippet": "import numpy as np\\nA = np.array([[1,3],[1/3,1]])\\nw = np.prod(A, axis=1)**(1/A.shape[0])\\nw /= w.sum()"
+  },
+  {
+    "id": "topsis",
+    "name": "TOPSIS",
+    "category": "Evaluation",
+    "tags": [
+      "ranking",
+      "multi-criteria"
+    ],
+    "summary": "Ranks alternatives based on distance to ideal and anti-ideal solutions.",
+    "latex": "C_i = D_i^- / (D_i^+ + D_i^-)",
+    "python_snippet": "# Normalize, weight, find ideal/anti-ideal, compute distances"
+  },
+  {
+    "id": "sir",
+    "name": "SIR Model",
+    "category": "Simulation",
+    "tags": [
+      "epidemic",
+      "ODE"
+    ],
+    "summary": "Simulates infectious disease spread using compartments.",
+    "latex": "dS/dt = -\u03b2SI, dI/dt = \u03b2SI - \u03b3I, dR/dt = \u03b3I",
+    "python_snippet": "from scipy.integrate import solve_ivp"
+  }
+]
