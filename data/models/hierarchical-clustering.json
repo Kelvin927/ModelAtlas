@@ -30,10 +30,24 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+    "required_columns": [
+    {
+      "role": "feature_x",
+      "canonical": "x",
+      "aliases": ["x", "X", "feat_x", "lon", "longitude"],
+      "dtype": "number",
+      "description": "First numeric feature for clustering"
+    },
+    {
+      "role": "feature_y",
+      "canonical": "y",
+      "aliases": ["y", "Y", "feat_y", "lat", "latitude"],
+      "dtype": "number",
+      "description": "Second numeric feature for clustering"
+    }
+  ],
   "code": {
-    "python_sklearn": "from sklearn.cluster import AgglomerativeClustering\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.cluster.hierarchy import dendrogram, linkage\n\nX = np.array([[1,2],[1,4],[1,0],[10,2],[10,4],[10,0]])\n\nZ = linkage(X, 'ward')\nplt.figure(figsize=(6,4))\ndendrogram(Z)\nplt.title('Hierarchical Clustering Dendrogram')\nplt.savefig('output.png')\n\nmodel = AgglomerativeClustering(n_clusters=2).fit(X)\nprint('Labels:', model.labels_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom scipy.cluster.hierarchy import linkage,fcluster\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]\nZ = linkage(X,'ward')\nlabels = fcluster(Z,2,criterion='maxclust')\n\nprint('labels=', labels)\ndf['cluster']=labels\ndf.to_csv('clustered.csv',index=False)"
   },
   "usage": {
     "workflow": [

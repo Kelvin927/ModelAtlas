@@ -30,10 +30,13 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"},
+    {"role":"label","canonical":"label","aliases":["target"],"dtype":"number","description":"Class label"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.naive_bayes import GaussianNB\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[2,1],[3,2],[2,3]])\ny = np.array([0,0,1,1])\n\nmodel = GaussianNB().fit(X,y)\n\nplt.scatter(X[:,0],X[:,1],c=y,cmap='coolwarm',edgecolor='k')\nplt.title('Naive Bayes Data')\nplt.savefig('output.png')\nprint('Prediction for [2,2]:', model.predict([[2,2]]))",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.naive_bayes import GaussianNB\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]; y = df['label']\nmodel = GaussianNB().fit(X,y)\n\nprint('score=', model.score(X,y))\npd.DataFrame({'pred':model.predict(X)}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

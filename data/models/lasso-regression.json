@@ -44,10 +44,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X","feat_x"],"dtype":"number","description":"Independent variable"},
+    {"role":"target_y","canonical":"y","aliases":["Y","target"],"dtype":"number","description":"Dependent variable"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.linear_model import Lasso\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.random.randn(100, 1)\ny = 3*X[:,0] + np.random.randn(100)*0.5\n\nmodel = Lasso(alpha=0.1).fit(X,y)\n\nplt.scatter(X,y,color='blue',alpha=0.5,label='Data')\nx_range = np.linspace(X.min(), X.max(), 100).reshape(-1,1)\nplt.plot(x_range, model.predict(x_range), color='red', label='Lasso Fit')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.linear_model import Lasso\n\ndf = pd.read_csv('data.csv')\nX = df[['x']]; y = df['y']\nmodel = Lasso(alpha=0.1).fit(X,y)\n\nprint('coef=', model.coef_)\npd.DataFrame({'pred':model.predict(X)}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

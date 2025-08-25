@@ -42,10 +42,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X","lon"],"dtype":"number","description":"Feature X"},
+    {"role":"feature_y","canonical":"y","aliases":["Y","lat"],"dtype":"number","description":"Feature Y"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.cluster import DBSCAN\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[2,2],[2,3],[8,7],[8,8],[25,80]])\n\nmodel = DBSCAN(eps=3, min_samples=2).fit(X)\n\nplt.scatter(X[:,0], X[:,1], c=model.labels_, cmap='rainbow')\nplt.title('DBSCAN Clustering')\nplt.savefig('output.png')\nprint('Labels:', model.labels_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.cluster import DBSCAN\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]\nmodel = DBSCAN(eps=0.5, min_samples=2).fit(X)\nprint('labels=', set(model.labels_))\ndf['cluster'] = model.labels_\ndf.to_csv('clustered.csv', index=False)"
   },
   "usage": {
     "workflow": [

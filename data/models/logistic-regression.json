@@ -40,10 +40,13 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+    "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"},
+    {"role":"label","canonical":"label","aliases":["target"],"dtype":"number","description":"Class label"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.linear_model import LogisticRegression\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\n\nmodel = LogisticRegression().fit(X,y)\n\nx_range = np.linspace(0,3,100).reshape(-1,1)\nprobs = model.predict_proba(x_range)[:,1]\n\nplt.scatter(X, y, color='blue', label='Data')\nplt.plot(x_range, probs, color='red', label='Logistic Curve')\nplt.xlabel('X')\nplt.ylabel('P(y=1)')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd, matplotlib.pyplot as plt\nfrom sklearn.linear_model import LogisticRegression\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']].values; y = df['label']\nmodel = LogisticRegression(max_iter=200).fit(X,y)\n\nplt.scatter(X[:,0], X[:,1], c=y)\nplt.savefig('output.png')\n\nprint('coef=', model.coef_)\npd.DataFrame({'prob':model.predict_proba(X)[:,1]}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

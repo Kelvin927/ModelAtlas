@@ -30,10 +30,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"time","canonical":"time","aliases":["t","ds"],"dtype":"number","description":"Time index"},
+    {"role":"value","canonical":"value","aliases":["y"],"dtype":"number","description":"Series value"}
+  ],
   "code": {
-    "python_sklearn": "from statsmodels.tsa.arima.model import ARIMA\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ns = pd.Series([1,2,3,4,5,6,7,8,9,10])\n\nmodel = ARIMA(s, order=(1,1,1)).fit()\nforecast = model.forecast(5)\n\nplt.plot(s, label='Data')\nplt.plot(range(len(s), len(s)+5), forecast, label='Forecast', color='red')\nplt.legend()\nplt.title('ARIMA Forecast')\nplt.savefig('output.png')\nprint(forecast)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom statsmodels.tsa.arima.model import ARIMA\n\ndf = pd.read_csv('data.csv')\ny = df['value']\nmodel = ARIMA(y, order=(1,0,0)).fit()\nforecast = model.forecast(steps=5)\nprint(forecast)\npd.DataFrame({'forecast':forecast}).to_csv('result.csv',index=False)"
   },
   "usage": {
     "workflow": [

@@ -213,6 +213,9 @@ export default function ModelDetail() {
                   {col.aliases?.length ? (
                     <span className="text-gray-500"> (aliases: {col.aliases.join(", ")})</span>
                   ) : null}
+                  {col.dtype ? (
+                    <span className="text-gray-500"> (dtype: {col.dtype})</span>
+                  ) : null}
                 </li>
               );
             })}

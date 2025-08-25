@@ -38,10 +38,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"criteria","canonical":"criteria","aliases":["criterion"],"dtype":"string","description":"Criteria name"},
+    {"role":"value","canonical":"value","aliases":["score"],"dtype":"number","description":"Score for alternative under criteria"}
+  ],
   "code": {
-    "python_sklearn": "import numpy as np\nimport matplotlib.pyplot as plt\n\nA = np.array([[1, 1/3, 3], [3, 1, 5], [1/3, 1/5, 1]])\nvals, vecs = np.linalg.eig(A)\nmax_idx = np.argmax(vals.real)\nw = np.abs(vecs[:, max_idx].real)\nw /= w.sum()\n\nplt.bar(range(len(w)), w, tick_label=[\"C1\",\"C2\",\"C3\"])\nplt.ylabel('Weight')\nplt.title('AHP Weights')\nplt.savefig('output.png')\nprint('weights=', w)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\n\ndf = pd.read_csv('data.csv')\nprint('criteria values=', df.head())"
   },
   "usage": {
     "workflow": [

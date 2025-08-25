@@ -43,10 +43,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X","feat_x"],"dtype":"number","description":"Independent variable"},
+    {"role":"target_y","canonical":"y","aliases":["Y","target"],"dtype":"number","description":"Dependent variable"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.linear_model import Ridge\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1],[2],[3],[4]])\ny = np.array([1,2,3,4])\n\nmodel = Ridge(alpha=1.0).fit(X,y)\n\nplt.scatter(X,y,color='blue',label='Data')\nplt.plot(X, model.predict(X), color='red', label='Ridge Fit')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.linear_model import Ridge\n\ndf = pd.read_csv('data.csv')\nX = df[['x']]; y = df['y']\nmodel = Ridge(alpha=1.0).fit(X,y)\n\nprint('coef=', model.coef_)\npd.DataFrame({'pred':model.predict(X)}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

@@ -44,10 +44,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X","feat_x"],"dtype":"number","description":"Independent variable"},
+    {"role":"target_y","canonical":"y","aliases":["Y","target"],"dtype":"number","description":"Dependent variable"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.linear_model import LinearRegression\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1],[2],[3],[4],[5]])\ny = np.array([1.2,2.4,2.9,4.2,5.1])\n\nmodel = LinearRegression().fit(X,y)\n\nplt.scatter(X, y, color='blue', label='Data')\nplt.plot(X, model.predict(X), color='red', label='Regression Line')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd, matplotlib.pyplot as plt\nfrom sklearn.linear_model import LinearRegression\n\ndf = pd.read_csv('data.csv')\nX = df[['x']].values; y = df['y'].values\nmodel = LinearRegression().fit(X,y)\npred = model.predict(X)\n\nplt.scatter(X[:,0], y)\nplt.plot(X[:,0], pred, color='red')\nplt.savefig('output.png')\n\nprint('coef=', model.coef_, 'intercept=', model.intercept_)\npd.DataFrame({'x':X[:,0],'y':y,'y_hat':pred}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

@@ -31,10 +31,24 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {
+      "role": "time",
+      "canonical": "ds",
+      "aliases": ["time", "date"],
+      "dtype": "date",
+      "description": "Datetime"
+    },
+    {
+      "role": "value",
+      "canonical": "y",
+      "aliases": ["value"],
+      "dtype": "number",
+      "description": "Series value"
+    }
+  ],
   "code": {
-    "python_sklearn": "from prophet import Prophet\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame({'ds': pd.date_range('2020-01-01', periods=30), 'y': range(30)})\n\nmodel = Prophet().fit(df)\nfuture = model.make_future_dataframe(periods=7)\nforecast = model.predict(future)\n\nmodel.plot(forecast)\nplt.title('Prophet Forecast')\nplt.savefig('output.png')\nprint(forecast[['ds','yhat']].tail())",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom prophet import Prophet\n\n# Prophet expects columns 'ds' (date) and 'y' (value)\ndf = pd.read_csv('data.csv')\nmodel = Prophet().fit(df)\n\nfuture = model.make_future_dataframe(periods=5)\nforecast = model.predict(future)\nprint(forecast[['ds','yhat']].tail())\nforecast[['ds','yhat']].to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

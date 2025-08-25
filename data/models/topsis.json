@@ -30,10 +30,24 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {
+      "role": "criteria",
+      "canonical": "criteria",
+      "aliases": ["criterion"],
+      "dtype": "string",
+      "description": "Criteria name"
+    },
+    {
+      "role": "value",
+      "canonical": "value",
+      "aliases": ["score"],
+      "dtype": "number",
+      "description": "Score for alternative under criteria"
+    }
+  ],
   "code": {
-    "python_sklearn": "import numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[250,16,12,5],[200,16,8,3],[300,32,16,4],[275,32,8,4],[225,16,16,2]], dtype=float)\nw = np.array([0.35,0.25,0.25,0.15])\ncost = np.array([False, False, False, True])\n\nnorm = X/np.sqrt((X**2).sum(axis=0))\nv = norm*w\nideal = np.where(cost, v.min(axis=0), v.max(axis=0))\nante = np.where(cost, v.max(axis=0), v.min(axis=0))\nS_pos = np.sqrt(((v-ideal)**2).sum(axis=1))\nS_neg = np.sqrt(((v-ante)**2).sum(axis=1))\nC = S_neg/(S_pos+S_neg)\n\nplt.bar(range(len(C)), C)\nplt.xlabel('Alternative')\nplt.ylabel('Score')\nplt.title('TOPSIS Ranking')\nplt.savefig('output.png')\nprint('Ranking (desc):', np.argsort(-C))",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nimport numpy as np\n\n# Example TOPSIS procedure (simplified)\ndf = pd.read_csv('data.csv')\n# Assume columns: alternative, criteria, value\npivot = df.pivot_table(index='alternative', columns='criteria', values='value')\nX = pivot.values.astype(float)\n\n# Normalize\nnorm = X / np.sqrt((X**2).sum(axis=0))\n# Ideal best & worst\nbest = norm.max(axis=0)\nworst = norm.min(axis=0)\n# Distances\nd_pos = np.sqrt(((norm-best)**2).sum(axis=1))\nd_neg = np.sqrt(((norm-worst)**2).sum(axis=1))\nscores = d_neg/(d_pos+d_neg)\n\nresult = pd.DataFrame({'alternative':pivot.index,'score':scores})\nprint(result)\nresult.to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

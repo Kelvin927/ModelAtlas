@@ -39,10 +39,12 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.decomposition import PCA\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[3,4],[5,6]])\n\nmodel = PCA(n_components=1).fit(X)\nX_proj = model.transform(X)\n\nplt.scatter(X[:,0], X[:,1], label='Original')\nplt.scatter(X_proj, [0,0,0], label='Projected', color='red')\nplt.legend()\nplt.title('PCA Projection')\nplt.savefig('output.png')\nprint('Explained Variance Ratio:', model.explained_variance_ratio_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.decomposition import PCA\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]\nmodel = PCA(n_components=2).fit(X)\n\nprint('explained variance', model.explained_variance_ratio_)\npd.DataFrame(model.transform(X),columns=['pc1','pc2']).to_csv('result.csv',index=False)"
   },
   "usage": {
     "workflow": [

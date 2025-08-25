@@ -44,10 +44,13 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"},
+    {"role":"label","canonical":"label","aliases":["target"],"dtype":"number","description":"Class label"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.neighbors import KNeighborsClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\n\nmodel = KNeighborsClassifier(n_neighbors=3).fit(X,y)\n\nx_range = np.linspace(0,3,100).reshape(-1,1)\npreds = model.predict(x_range)\n\nplt.scatter(X,y,color='blue',label='Data')\nplt.plot(x_range, preds, color='red', label='KNN Prediction')\nplt.legend()\nplt.savefig('output.png')\nprint('Prediction for [1.5]:', model.predict([[1.5]]))",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]; y = df['label']\nmodel = KNeighborsClassifier(n_neighbors=3).fit(X,y)\n\nprint('score=', model.score(X,y))\npd.DataFrame({'pred':model.predict(X)}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

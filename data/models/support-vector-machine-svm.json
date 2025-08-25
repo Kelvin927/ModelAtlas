@@ -51,10 +51,13 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"},
+    {"role":"label","canonical":"label","aliases":["target"],"dtype":"number","description":"Class label"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.svm import SVC\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = SVC(kernel='rbf', probability=True).fit(X,y)\n\nxx, yy = np.meshgrid(np.linspace(-0.5,1.5,100), np.linspace(-0.5,1.5,100))\nZ = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)\n\nplt.contourf(xx, yy, Z, alpha=0.3)\nplt.scatter(X[:,0], X[:,1], c=y, edgecolor='k')\nplt.title('SVM Decision Boundary')\nplt.savefig('output.png')\nprint('Support Vectors:', model.support_vectors_)",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+    "python_sklearn": "import pandas as pd\nfrom sklearn.svm import SVC\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]; y = df['label']\nmodel = SVC(probability=True).fit(X,y)\n\nprint('score=', model.score(X,y))\npd.DataFrame({'prob':model.predict_proba(X)[:,1]}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [

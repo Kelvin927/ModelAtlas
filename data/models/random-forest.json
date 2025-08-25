@@ -49,10 +49,13 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {"role":"feature_x","canonical":"x","aliases":["X"],"dtype":"number","description":"Feature"},
+    {"role":"feature_y","canonical":"y","aliases":["Y"],"dtype":"number","description":"Feature"},
+    {"role":"label","canonical":"label","aliases":["target"],"dtype":"number","description":"Class label"}
+  ],
   "code": {
-    "python_sklearn": "from sklearn.ensemble import RandomForestClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = RandomForestClassifier(n_estimators=50).fit(X,y)\n\nimportances = model.feature_importances_\nplt.bar(['x1','x2'], importances)\nplt.ylabel('Importance')\nplt.title('Feature Importance (RF)')\nplt.savefig('output.png')\nprint('Prediction for [1,0]:', model.predict([[1,0]]))",
-    "python_statsmodels": "",
-    "python_pytorch": ""
+  "python_sklearn": "import pandas as pd\nfrom sklearn.ensemble import RandomForestClassifier\n\ndf = pd.read_csv('data.csv')\nX = df[['x','y']]; y = df['label']\nmodel = RandomForestClassifier().fit(X,y)\n\nprint('score=', model.score(X,y))\npd.DataFrame({'pred':model.predict(X)}).to_csv('result.csv', index=False)"
   },
   "usage": {
     "workflow": [
