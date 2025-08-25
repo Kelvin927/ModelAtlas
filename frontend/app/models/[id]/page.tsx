@@ -103,6 +103,8 @@ export default function ModelDetail() {
     }
   };
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+
   const handleRunCode = async () => {
     if (!editableCode) return;
     setRunLoading(true);
@@ -113,9 +115,8 @@ export default function ModelDetail() {
       formData.append("code", editableCode);
       formData.append("model_id", id || "");
 
-      // send column_map only if the model declares required columns
       if (model?.required_columns && Object.keys(columnMap).length > 0) {
-        formData.append("column_map", JSON.stringify(columnMap)); // {"x":"lng","y":"lat"}
+        formData.append("column_map", JSON.stringify(columnMap));
       }
 
       if (files && files.length > 0) {
@@ -123,7 +124,7 @@ export default function ModelDetail() {
         setUploadMessage("✅ File(s) selected, sending to backend...");
       }
 
-      const res = await fetch("http://127.0.0.1:8000/run-code", {
+      const res = await fetch(`${API_BASE}/run-code`, {
         method: "POST",
         body: formData,
       });
@@ -145,6 +146,7 @@ export default function ModelDetail() {
       setRunLoading(false);
     }
   };
+
 
   if (loading) return <p className="p-6">Loading...</p>;
   if (!model) {
