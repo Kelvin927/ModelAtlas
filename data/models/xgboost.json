@@ -1,0 +1,122 @@
+{
+  "id": "xgboost",
+  "name": "XGBoost",
+  "aliases": [],
+  "category": "Ensemble",
+  "tags": [
+    "xgboost",
+    "boosting",
+    "ensemble"
+  ],
+  "level": "beginner",
+  "summary": "Highly-optimized gradient boosting with regularization and efficient split finding; strong on tabular benchmarks.",
+  "app_scenarios": [
+    "Kaggle/tabular benchmarks",
+    "Credit scoring",
+    "CTR prediction"
+  ],
+  "math": {
+    "core_formula": "Obj = \\sum l(y_i, \\hat{y}_i) + \\sum \\Omega(f_k), \\; \\Omega(f) = \\gamma T + \\frac{1}{2}\\lambda \\lVert w \\rVert^2",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "XGBoost GPU",
+      "DART"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "n_estimators",
+      "type": "int",
+      "default": 300,
+      "tips": "Use early stopping with eval_set"
+    },
+    {
+      "name": "max_depth",
+      "type": "int",
+      "default": 6,
+      "tips": "Shallower trees generalize better"
+    },
+    {
+      "name": "learning_rate",
+      "type": "float",
+      "default": 0.1,
+      "tips": "Lower for better generalization"
+    },
+    {
+      "name": "subsample",
+      "type": "float",
+      "default": 1.0,
+      "tips": "0.6–0.9 often helps"
+    }
+  ],
+  "data_requirements": {
+    "input": "Careful tuning (eta, max_depth, subsample); Categoricals need encoding",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from xgboost import XGBClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = XGBClassifier(n_estimators=50, max_depth=3).fit(X,y)\n\nplt.bar(['x1','x2'], model.feature_importances_)\nplt.ylabel('Importance')\nplt.title('XGBoost Feature Importance')\nplt.savefig('output.png')\nprint('Prediction for [1,0]:', model.predict([[1,0]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Encode categoricals (unless using CatBoost elsewhere)",
+      "Set eval_set and early_stopping_rounds",
+      "Tune depth/eta/subsample/colsample",
+      "Check feature importance with care"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy/ROC-AUC (classification)",
+      "RMSE (regression)"
+    ],
+    "validation": "Stratified CV or early-stopping on validation",
+    "baselines": [
+      "GBDT",
+      "Random Forest"
+    ]
+  },
+  "strengths": [
+    "Strong performance",
+    "Regularized",
+    "Handles missing values"
+  ],
+  "weaknesses": [
+    "Many hyperparameters",
+    "Potential overfitting if untuned"
+  ],
+  "pitfalls": [
+    "Data leakage via CV",
+    "Overfitting with too many trees or high depth"
+  ],
+  "comparisons": [
+    {
+      "with": "LightGBM",
+      "differences": [
+        "LightGBM uses histogram + leaf-wise growth; often faster on large data"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Feature importance",
+    "SHAP plots"
+  ],
+  "references": [
+    {
+      "title": "https://xgboost.readthedocs.io/en/stable/",
+      "url": "https://xgboost.readthedocs.io/en/stable/",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "xgboost",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

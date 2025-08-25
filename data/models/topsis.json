@@ -1,0 +1,97 @@
+{
+  "id": "topsis",
+  "name": "TOPSIS",
+  "aliases": [],
+  "category": "Multi-criteria Decision Making",
+  "tags": [
+    "topsis",
+    "mcdm",
+    "ranking"
+  ],
+  "level": "beginner",
+  "summary": "Ranks alternatives by closeness to the ideal and distance from the negative-ideal after normalization and weighting.",
+  "app_scenarios": [
+    "Supplier selection",
+    "Project prioritization"
+  ],
+  "math": {
+    "core_formula": "v_{ij} = w_j \\cdot \\frac{x_{ij}}{\\sqrt{\\sum_i x_{ij}^2}},\\; S_i^+ = \\sqrt{\\sum_j (v_{ij}-v_j^+)^2},\\; S_i^- = \\sqrt{\\sum_j (v_{ij}-v_j^-)^2},\\; C_i = \\frac{S_i^-}{S_i^+ + S_i^-}",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "Fuzzy TOPSIS",
+      "Grey TOPSIS"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Monotonic criteria direction; Weights sum to 1",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "import numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[250,16,12,5],[200,16,8,3],[300,32,16,4],[275,32,8,4],[225,16,16,2]], dtype=float)\nw = np.array([0.35,0.25,0.25,0.15])\ncost = np.array([False, False, False, True])\n\nnorm = X/np.sqrt((X**2).sum(axis=0))\nv = norm*w\nideal = np.where(cost, v.min(axis=0), v.max(axis=0))\nante = np.where(cost, v.max(axis=0), v.min(axis=0))\nS_pos = np.sqrt(((v-ideal)**2).sum(axis=1))\nS_neg = np.sqrt(((v-ante)**2).sum(axis=1))\nC = S_neg/(S_pos+S_neg)\n\nplt.bar(range(len(C)), C)\nplt.xlabel('Alternative')\nplt.ylabel('Score')\nplt.title('TOPSIS Ranking')\nplt.savefig('output.png')\nprint('Ranking (desc):', np.argsort(-C))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Normalize decision matrix",
+      "Apply weights (sum to 1)",
+      "Determine ideal and anti-ideal",
+      "Compute distances and closeness C_i",
+      "Rank alternatives"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Stability analysis",
+      "Rank correlation vs baseline"
+    ],
+    "validation": "Perturbation analysis on weights and scaling",
+    "baselines": [
+      "Equal-weight score",
+      "AHP-derived weights"
+    ]
+  },
+  "strengths": [
+    "Simple and fast",
+    "Considers both ideal and anti-ideal"
+  ],
+  "weaknesses": [
+    "Weight subjectivity",
+    "Sensitive to normalization"
+  ],
+  "pitfalls": [
+    "Weight/scale subjectivity",
+    "Criteria direction mis-specified (benefit vs cost)"
+  ],
+  "comparisons": [
+    {
+      "with": "AHP",
+      "differences": [
+        "AHP for weights; TOPSIS for ranking"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Radar chart",
+    "bar ranking",
+    "distance plots",
+    "Distance to ideal/anti-ideal bar chart"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/TOPSIS",
+      "url": "https://en.wikipedia.org/wiki/TOPSIS",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

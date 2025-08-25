@@ -1,0 +1,99 @@
+{
+  "id": "naive-bayes",
+  "name": "Naive Bayes",
+  "aliases": [],
+  "category": "Classification",
+  "tags": [
+    "bayes",
+    "probabilistic"
+  ],
+  "level": "beginner",
+  "summary": "Bayesian classifier with strong conditional-independence assumptions; excellent with high-dimensional sparse features (e.g., text).",
+  "app_scenarios": [
+    "Text/email classification",
+    "Baseline models"
+  ],
+  "math": {
+    "core_formula": "P(y|x) = \\frac{P(y) \\prod_i P(x_i|y)}{P(x)}",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "GaussianNB",
+      "MultinomialNB",
+      "BernoulliNB"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Appropriate likelihood models (Gaussian/Multinomial)",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.naive_bayes import GaussianNB\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[2,1],[3,2],[2,3]])\ny = np.array([0,0,1,1])\n\nmodel = GaussianNB().fit(X,y)\n\nplt.scatter(X[:,0],X[:,1],c=y,cmap='coolwarm',edgecolor='k')\nplt.title('Naive Bayes Data')\nplt.savefig('output.png')\nprint('Prediction for [2,2]:', model.predict([[2,2]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Choose likelihood (Gaussian/Multinomial/Bernoulli)",
+      "For text, use TF-IDF",
+      "Consider log-count ratio (NB-SVM) for strong baselines"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "F1",
+      "Logloss"
+    ],
+    "validation": "Stratified CV; evaluate logloss if probability quality matters",
+    "baselines": [
+      "Logistic Regression"
+    ]
+  },
+  "strengths": [
+    "Fast",
+    "Works well with high-dimensional sparse data"
+  ],
+  "weaknesses": [
+    "Strong independence assumption",
+    "Calibrated probabilities vary"
+  ],
+  "pitfalls": [
+    "Violations of independence degrade calibration",
+    "Continuous features need proper likelihood"
+  ],
+  "comparisons": [
+    {
+      "with": "Logistic Regression",
+      "differences": [
+        "NB generative; LR discriminative"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Likelihood curves",
+    "confusion matrix",
+    "Confusion matrix",
+    "Likelihood histograms"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Naive_Bayes_classifier",
+      "url": "https://en.wikipedia.org/wiki/Naive_Bayes_classifier",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/naive_bayes.html",
+      "url": "https://scikit-learn.org/stable/modules/naive_bayes.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

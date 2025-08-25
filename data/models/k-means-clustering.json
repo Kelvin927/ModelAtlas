@@ -1,0 +1,118 @@
+{
+  "id": "k-means-clustering",
+  "name": "K-Means Clustering",
+  "aliases": [],
+  "category": "Clustering",
+  "tags": [
+    "clustering",
+    "unsupervised"
+  ],
+  "level": "beginner",
+  "summary": "Partitions observations into k clusters minimizing within-cluster variance; fast and widely used.",
+  "app_scenarios": [
+    "Customer segmentation",
+    "Vector quantization"
+  ],
+  "math": {
+    "core_formula": "\\underset{S}{\\arg\\min} \\sum_{k=1}^K \\sum_{x_i \\in S_k} \\lVert x_i - \\mu_k \\rVert^2",
+    "derivation": [
+      "Alternate: assign to nearest centroid, then update centroids",
+      "Converges to local optimum"
+    ],
+    "assumptions": [
+      "Spherical clusters of similar size",
+      "Euclidean distance meaningful"
+    ],
+    "constraints": [],
+    "variants": [
+      "MiniBatch K-Means",
+      "K-Medoids"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "n_clusters",
+      "type": "int",
+      "default": 8,
+      "tips": "Use elbow/silhouette/Gap to pick k"
+    },
+    {
+      "name": "init",
+      "type": "categorical",
+      "default": "k-means++",
+      "range": "{random,k-means++}",
+      "tips": "k-means++ stabilizes results"
+    }
+  ],
+  "data_requirements": {
+    "input": "Feature scaling; Choose k (e.g., elbow, silhouette)",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.cluster import KMeans\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[1,4],[1,0],[10,2],[10,4],[10,0]])\n\nmodel = KMeans(n_clusters=2, n_init=10).fit(X)\n\nplt.scatter(X[:,0],X[:,1],c=model.labels_,cmap='viridis')\nplt.scatter(model.cluster_centers_[:,0], model.cluster_centers_[:,1], c='red', marker='x')\nplt.title('K-Means Clustering')\nplt.savefig('output.png')\nprint('Cluster centers:', model.cluster_centers_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Standardize features",
+      "Run with several random seeds",
+      "Use MiniBatch on large datasets"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Inertia (WCSS)",
+      "Silhouette score"
+    ],
+    "validation": "Silhouette/Calinski-Harabasz/Davies-Bouldin; if labels exist, use ARI/NMI",
+    "baselines": [
+      "Random assignment"
+    ]
+  },
+  "strengths": [
+    "Simple and fast",
+    "Scales to large data"
+  ],
+  "weaknesses": [
+    "Requires k",
+    "Sensitive to init and scale",
+    "Assumes spherical clusters"
+  ],
+  "pitfalls": [
+    "Sensitive to scale and outliers",
+    "Empty clusters when k large"
+  ],
+  "comparisons": [
+    {
+      "with": "DBSCAN",
+      "differences": [
+        "DBSCAN handles arbitrary shapes; K-means prefers globular clusters"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Cluster scatter with centroids",
+    "elbow plot",
+    "Elbow plot"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/K-means_clustering",
+      "url": "https://en.wikipedia.org/wiki/K-means_clustering",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/clustering.html#k-means",
+      "url": "https://scikit-learn.org/stable/modules/clustering.html#k-means",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "numpy"
+  ],
+  "last_updated": "2025-08-24"
+}

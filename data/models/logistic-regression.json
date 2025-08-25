@@ -1,0 +1,118 @@
+{
+  "id": "logistic-regression",
+  "name": "Logistic Regression",
+  "aliases": [],
+  "category": "Classification",
+  "tags": [
+    "classification",
+    "logit",
+    "supervised"
+  ],
+  "level": "beginner",
+  "summary": "Linear classifier that models log-odds with a sigmoid link; outputs calibrated probabilities with proper regularization.",
+  "app_scenarios": [
+    "Medical diagnosis",
+    "Customer churn",
+    "Credit scoring"
+  ],
+  "math": {
+    "core_formula": "P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta^T x)}}",
+    "derivation": [
+      "\\ell(\\beta)=\\sum_i y_i\\log \\sigma(z_i)+(1-y_i)\\log(1-\\sigma(z_i))",
+      "z_i=\\beta_0+x_i^\\top\\beta",
+      "Use gradient ascent or LBFGS to maximize \\ell(\\beta) with L2/L1 penalty"
+    ],
+    "assumptions": [
+      "Independent observations",
+      "Logit is linear in features",
+      "Low multicollinearity",
+      "Sufficient samples per class"
+    ],
+    "constraints": [],
+    "variants": [
+      "Multinomial Logistic Regression",
+      "Regularized Logistic (L1/L2)"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Independent observations; Linearity in the log-odds",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.linear_model import LogisticRegression\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\n\nmodel = LogisticRegression().fit(X,y)\n\nx_range = np.linspace(0,3,100).reshape(-1,1)\nprobs = model.predict_proba(x_range)[:,1]\n\nplt.scatter(X, y, color='blue', label='Data')\nplt.plot(x_range, probs, color='red', label='Logistic Curve')\nplt.xlabel('X')\nplt.ylabel('P(y=1)')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Scale features if using L1/L2",
+      "Handle class imbalance (class_weight or resampling)",
+      "Choose solver according to penalty and size",
+      "Calibrate if probabilities are critical"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "Precision",
+      "Recall",
+      "F1",
+      "ROC-AUC"
+    ],
+    "validation": "Stratified K-fold (e.g., 5-fold) to preserve class balance",
+    "baselines": [
+      "DummyClassifier (most frequent)"
+    ]
+  },
+  "strengths": [
+    "Probabilistic outputs",
+    "Interpretable coefficients",
+    "Efficient training"
+  ],
+  "weaknesses": [
+    "Linear decision boundary",
+    "Needs feature scaling for some solvers"
+  ],
+  "pitfalls": [
+    "Separation leading to infinite coefficients without regularization",
+    "Overconfidence with correlated features"
+  ],
+  "comparisons": [
+    {
+      "with": "SVM",
+      "differences": [
+        "Logistic gives probabilities; linear decision boundary similar to linear SVM"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Decision boundary",
+    "ROC curve",
+    "PR curve",
+    "ROC/PR curves",
+    "Calibration curve",
+    "Coefficient magnitudes"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Logistic_regression",
+      "url": "https://en.wikipedia.org/wiki/Logistic_regression",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression",
+      "url": "https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "statsmodels",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

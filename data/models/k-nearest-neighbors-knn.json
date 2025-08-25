@@ -1,0 +1,111 @@
+{
+  "id": "k-nearest-neighbors-knn",
+  "name": "K-Nearest Neighbors (KNN)",
+  "aliases": [],
+  "category": "Classification/Regression",
+  "tags": [
+    "knn",
+    "lazy-learning"
+  ],
+  "level": "beginner",
+  "summary": "Lazy learner that predicts from neighbors; strong simple baseline but sensitive to scale and k.",
+  "app_scenarios": [
+    "Recommendation seeds",
+    "Simple baselines"
+  ],
+  "math": {
+    "core_formula": "\\hat{y} = \\text{mode/mean}\\{ y_i : x_i \\in N_k(x) \\}",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "KD-Tree",
+      "Ball-Tree",
+      "Weighted KNN"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "n_neighbors",
+      "type": "int",
+      "default": 5,
+      "tips": "Odd number for binary tasks; tune via CV"
+    },
+    {
+      "name": "weights",
+      "type": "categorical",
+      "default": "uniform",
+      "range": "{uniform,distance}",
+      "tips": "Distance weighting often helps"
+    }
+  ],
+  "data_requirements": {
+    "input": "Feature scaling; Distance metric choice",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.neighbors import KNeighborsClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0],[1],[2],[3]])\ny = np.array([0,0,1,1])\n\nmodel = KNeighborsClassifier(n_neighbors=3).fit(X,y)\n\nx_range = np.linspace(0,3,100).reshape(-1,1)\npreds = model.predict(x_range)\n\nplt.scatter(X,y,color='blue',label='Data')\nplt.plot(x_range, preds, color='red', label='KNN Prediction')\nplt.legend()\nplt.savefig('output.png')\nprint('Prediction for [1.5]:', model.predict([[1.5]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Standardize features",
+      "Try multiple distance metrics",
+      "Use KD/Ball-tree for speed on large N"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "F1",
+      "RMSE (for KNN regressor)"
+    ],
+    "validation": "Stratified CV; report variance across folds",
+    "baselines": [
+      "Majority/mean baseline"
+    ]
+  },
+  "strengths": [
+    "Simple",
+    "No training time"
+  ],
+  "weaknesses": [
+    "Slow inference on large data",
+    "Sensitive to k and scaling"
+  ],
+  "pitfalls": [
+    "Curse of dimensionality",
+    "Slow inference without indexing"
+  ],
+  "comparisons": [
+    {
+      "with": "SVM",
+      "differences": [
+        "KNN non-parametric local; SVM global boundary"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Neighbor points in 2D",
+    "decision regions"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm",
+      "url": "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/neighbors.html",
+      "url": "https://scikit-learn.org/stable/modules/neighbors.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

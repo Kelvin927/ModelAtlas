@@ -1,0 +1,109 @@
+{
+  "id": "principal-component-analysis-pca",
+  "name": "Principal Component Analysis (PCA)",
+  "aliases": [],
+  "category": "Dimensionality Reduction",
+  "tags": [
+    "pca",
+    "unsupervised",
+    "projection"
+  ],
+  "level": "beginner",
+  "summary": "Projects data to orthogonal axes of maximal variance; useful for compression, noise reduction and visualization.",
+  "app_scenarios": [
+    "Noise reduction",
+    "Visualization",
+    "Preprocessing"
+  ],
+  "math": {
+    "core_formula": "W = \\text{eigenvectors}(\\Sigma),\\; Z = XW",
+    "derivation": [
+      "\\Sigma=\\frac{1}{n}X^\\top X",
+      "Eigen-decompose \\Sigma=Q\\Lambda Q^\\top",
+      "Take top-k eigenvectors as principal components"
+    ],
+    "assumptions": [
+      "Linear structure captures variance",
+      "Mean-centered data"
+    ],
+    "constraints": [],
+    "variants": [
+      "Kernel PCA",
+      "Sparse PCA",
+      "Incremental PCA"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Centering data; Optionally scaling",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.decomposition import PCA\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[3,4],[5,6]])\n\nmodel = PCA(n_components=1).fit(X)\nX_proj = model.transform(X)\n\nplt.scatter(X[:,0], X[:,1], label='Original')\nplt.scatter(X_proj, [0,0,0], label='Projected', color='red')\nplt.legend()\nplt.title('PCA Projection')\nplt.savefig('output.png')\nprint('Explained Variance Ratio:', model.explained_variance_ratio_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Center (and often scale) features",
+      "Decide k via explained variance",
+      "Inspect loadings for interpretation"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Explained variance ratio",
+      "Reconstruction error"
+    ],
+    "validation": "Report cumulative explained variance",
+    "baselines": [
+      "Random projections for comparison"
+    ]
+  },
+  "strengths": [
+    "Reduces dimensionality",
+    "Uncorrelated components"
+  ],
+  "weaknesses": [
+    "Components hard to interpret",
+    "Linear method"
+  ],
+  "pitfalls": [
+    "Components hard to interpret",
+    "Sensitive to scaling and outliers"
+  ],
+  "comparisons": [
+    {
+      "with": "Kernel PCA",
+      "differences": [
+        "Kernel PCA captures nonlinear manifolds"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Scree plot",
+    "biplot",
+    "2D projection",
+    "Biplot",
+    "2D/3D component scatter"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Principal_component_analysis",
+      "url": "https://en.wikipedia.org/wiki/Principal_component_analysis",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/decomposition.html#pca",
+      "url": "https://scikit-learn.org/stable/modules/decomposition.html#pca",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "numpy"
+  ],
+  "last_updated": "2025-08-24"
+}

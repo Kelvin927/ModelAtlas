@@ -1,0 +1,114 @@
+{
+  "id": "ridge-regression",
+  "name": "Ridge Regression",
+  "aliases": [],
+  "category": "Regression",
+  "tags": [
+    "regression",
+    "l2",
+    "regularization"
+  ],
+  "level": "beginner",
+  "summary": "OLS with L2 penalty that shrinks coefficients to reduce variance and handle multicollinearity.",
+  "app_scenarios": [
+    "High-dimensional regression",
+    "Finance risk modeling"
+  ],
+  "math": {
+    "core_formula": "\\hat{\\beta} = (X^\\top X + \\alpha I)^{-1} X^\\top y",
+    "derivation": [
+      "J(\\beta)=\\|y-X\\beta\\|_2^2+\\alpha\\|\\beta\\|_2^2",
+      "\\nabla J=0 \\Rightarrow (X^\\top X+\\alpha I)\\hat\\beta=X^\\top y"
+    ],
+    "assumptions": [
+      "Same as OLS; plus proper feature scaling"
+    ],
+    "constraints": [],
+    "variants": [
+      "Kernel Ridge",
+      "Generalized Ridge"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "alpha",
+      "type": "float",
+      "default": 1.0,
+      "range": "[0,+inf)",
+      "tips": "Tune on log-scale via CV"
+    }
+  ],
+  "data_requirements": {
+    "input": "Continuous target; Feature scaling recommended",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.linear_model import Ridge\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1],[2],[3],[4]])\ny = np.array([1,2,3,4])\n\nmodel = Ridge(alpha=1.0).fit(X,y)\n\nplt.scatter(X,y,color='blue',label='Data')\nplt.plot(X, model.predict(X), color='red', label='Ridge Fit')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Standardize features",
+      "Set alpha grid (e.g., 1e-4..1e3)",
+      "CV to select alpha",
+      "Refit on full training data"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MSE",
+      "RMSE",
+      "R²",
+      "Cross-validated RMSE"
+    ],
+    "validation": "K-fold CV RMSE grid search",
+    "baselines": [
+      "OLS"
+    ]
+  },
+  "strengths": [
+    "Reduces variance",
+    "Stabilizes estimates under multicollinearity"
+  ],
+  "weaknesses": [
+    "Introduces bias",
+    "Alpha needs tuning"
+  ],
+  "pitfalls": [
+    "Not performing scaling -> uneven penalization",
+    "Too large alpha -> underfitting"
+  ],
+  "comparisons": [
+    {
+      "with": "Lasso",
+      "differences": [
+        "Ridge keeps all variables; Lasso can zero-out coefficients"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Coefficient shrinkage path vs alpha",
+    "Coefficient paths vs log(alpha)"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Tikhonov_regularization",
+      "url": "https://en.wikipedia.org/wiki/Tikhonov_regularization",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/linear_model.html#ridge-regression",
+      "url": "https://scikit-learn.org/stable/modules/linear_model.html#ridge-regression",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

@@ -1,0 +1,99 @@
+{
+  "id": "prophet",
+  "name": "Prophet",
+  "aliases": [],
+  "category": "Time Series",
+  "tags": [
+    "prophet",
+    "forecasting",
+    "time-series"
+  ],
+  "level": "beginner",
+  "summary": "Additive model decomposing time series into trend, seasonality, and holiday effects; easy to use with robust defaults.",
+  "app_scenarios": [
+    "Business KPIs",
+    "Seasonal demand",
+    "Web traffic"
+  ],
+  "math": {
+    "core_formula": "y(t) = g(t) + s(t) + h(t) + \\epsilon_t",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "Multiplicative seasonality",
+      "Extra regressors"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Datetime column 'ds' and value 'y'; Sufficient history",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from prophet import Prophet\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame({'ds': pd.date_range('2020-01-01', periods=30), 'y': range(30)})\n\nmodel = Prophet().fit(df)\nfuture = model.make_future_dataframe(periods=7)\nforecast = model.predict(future)\n\nmodel.plot(forecast)\nplt.title('Prophet Forecast')\nplt.savefig('output.png')\nprint(forecast[['ds','yhat']].tail())",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Prepare df with ds,y",
+      "Model with yearly/weekly/daily seasonality",
+      "Add holidays/regressors if needed",
+      "Cross-validate with built-in functions"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MAE",
+      "RMSE",
+      "MAPE",
+      "Cross-validation"
+    ],
+    "validation": "Time-series CV (cutoffs)",
+    "baselines": [
+      "Naive",
+      "ARIMA/SARIMA"
+    ]
+  },
+  "strengths": [
+    "Handles seasonality/holidays",
+    "Minimal tuning"
+  ],
+  "weaknesses": [
+    "Additive assumptions",
+    "Less flexible than custom models"
+  ],
+  "pitfalls": [
+    "Assumes additive components by default",
+    "Can overfit with too many changepoints"
+  ],
+  "comparisons": [
+    {
+      "with": "ARIMA",
+      "differences": [
+        "Prophet more automated; ARIMA more statistical diagnostics-based"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Trend/seasonality plots",
+    "forecast components",
+    "Trend/seasonality components",
+    "Prediction intervals"
+  ],
+  "references": [
+    {
+      "title": "https://facebook.github.io/prophet/docs/quick_start.html",
+      "url": "https://facebook.github.io/prophet/docs/quick_start.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "prophet",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

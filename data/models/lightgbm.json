@@ -1,0 +1,115 @@
+{
+  "id": "lightgbm",
+  "name": "LightGBM",
+  "aliases": [],
+  "category": "Ensemble",
+  "tags": [
+    "lightgbm",
+    "boosting",
+    "ensemble"
+  ],
+  "level": "beginner",
+  "summary": "Gradient boosting with histogram-based splits and leaf-wise tree growth; fast and memory-efficient.",
+  "app_scenarios": [
+    "Large-scale tabular tasks",
+    "Click-through rate prediction"
+  ],
+  "math": {
+    "core_formula": "Same general boosting objective with gradient and hessian-based splits; uses histogram binning.",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "LightGBM GPU",
+      "DART"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "num_leaves",
+      "type": "int",
+      "default": 31,
+      "tips": "Increase with caution to avoid overfit"
+    },
+    {
+      "name": "min_data_in_leaf",
+      "type": "int",
+      "default": 20,
+      "tips": "Raise for regularization"
+    },
+    {
+      "name": "learning_rate",
+      "type": "float",
+      "default": 0.1,
+      "tips": "Pair with early stopping"
+    }
+  ],
+  "data_requirements": {
+    "input": "Good binning parameters; Care with num_leaves/min_data_in_leaf",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from lightgbm import LGBMClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = LGBMClassifier(n_estimators=50).fit(X,y)\n\nplt.bar(['x1','x2'], model.feature_importances_)\nplt.ylabel('Importance')\nplt.title('LightGBM Feature Importance')\nplt.savefig('output.png')\nprint('Prediction for [1,0]:', model.predict([[1,0]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Prepare datasets with categorical encoding or built-in handling",
+      "Use early_stopping in fit",
+      "Tune num_leaves/min_data_in_leaf/feature_fraction"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy/ROC-AUC",
+      "Logloss",
+      "RMSE/MAE"
+    ],
+    "validation": "Validation set with early stopping",
+    "baselines": [
+      "XGBoost",
+      "GBDT"
+    ]
+  },
+  "strengths": [
+    "Fast training",
+    "Low memory",
+    "Good accuracy"
+  ],
+  "weaknesses": [
+    "Leaf-wise can overfit",
+    "Categorical handling differs"
+  ],
+  "pitfalls": [
+    "Leaf-wise growth can overfit small datasets",
+    "Inconsistent categorical handling compared to CatBoost"
+  ],
+  "comparisons": [
+    {
+      "with": "XGBoost",
+      "differences": [
+        "LightGBM faster on large sparse data; XGBoost sometimes more stable"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Feature importance",
+    "SHAP values"
+  ],
+  "references": [
+    {
+      "title": "https://lightgbm.readthedocs.io/",
+      "url": "https://lightgbm.readthedocs.io/",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "lightgbm",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

@@ -1,0 +1,111 @@
+{
+  "id": "dbscan",
+  "name": "DBSCAN",
+  "aliases": [],
+  "category": "Clustering",
+  "tags": [
+    "clustering",
+    "density"
+  ],
+  "level": "beginner",
+  "summary": "Clusters points by density; labels low-density points as noise; ideal for irregular shapes and outliers.",
+  "app_scenarios": [
+    "Spatial clustering",
+    "Anomaly/outlier detection"
+  ],
+  "math": {
+    "core_formula": "Core point if |N_\\varepsilon(p)| \\geq MinPts; clusters are density-connected components.",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "HDBSCAN",
+      "OPTICS"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "eps",
+      "type": "float",
+      "default": 0.5,
+      "tips": "Pick via k-distance plot"
+    },
+    {
+      "name": "min_samples",
+      "type": "int",
+      "default": 5,
+      "tips": "Set ≈ dimensionality*2 or higher"
+    }
+  ],
+  "data_requirements": {
+    "input": "Distance metric; Scale features appropriately",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.cluster import DBSCAN\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[2,2],[2,3],[8,7],[8,8],[25,80]])\n\nmodel = DBSCAN(eps=3, min_samples=2).fit(X)\n\nplt.scatter(X[:,0], X[:,1], c=model.labels_, cmap='rainbow')\nplt.title('DBSCAN Clustering')\nplt.savefig('output.png')\nprint('Labels:', model.labels_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Scale features",
+      "Plot k-distance to choose eps",
+      "Run DBSCAN, inspect noise points",
+      "Try HDBSCAN for varying density"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Silhouette score",
+      "Cluster purity (if labels exist)"
+    ],
+    "validation": "Silhouette on non-noise subset; external metrics if ground truth exists",
+    "baselines": [
+      "K-Means"
+    ]
+  },
+  "strengths": [
+    "Finds arbitrary shapes",
+    "No need for k",
+    "Identifies noise"
+  ],
+  "weaknesses": [
+    "Parameter sensitivity (eps, min_samples)",
+    "Struggles with varying densities"
+  ],
+  "pitfalls": [
+    "Varying density breaks single eps",
+    "High-dimensional data degrades distance meaning"
+  ],
+  "comparisons": [
+    {
+      "with": "HDBSCAN",
+      "differences": [
+        "HDBSCAN handles variable density and produces hierarchy"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Cluster scatter color-coded by labels",
+    "Cluster scatter color-coded by label"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/DBSCAN",
+      "url": "https://en.wikipedia.org/wiki/DBSCAN",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/clustering.html#dbscan",
+      "url": "https://scikit-learn.org/stable/modules/clustering.html#dbscan",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "numpy"
+  ],
+  "last_updated": "2025-08-24"
+}

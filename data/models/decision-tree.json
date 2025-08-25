@@ -1,0 +1,122 @@
+{
+  "id": "decision-tree",
+  "name": "Decision Tree",
+  "aliases": [],
+  "category": "Classification/Regression",
+  "tags": [
+    "tree",
+    "nonlinear",
+    "classification"
+  ],
+  "level": "beginner",
+  "summary": "Greedy, recursive partitioning to minimize impurity (classification) or variance (regression); highly interpretable leaf rules.",
+  "app_scenarios": [
+    "Medical diagnosis",
+    "Risk assessment",
+    "Segmentation"
+  ],
+  "math": {
+    "core_formula": "Gini = 1 - \\sum p_i^2 \\quad \\text{or} \\quad Entropy = -\\sum p_i \\log p_i",
+    "derivation": [
+      "\\Delta i = i(parent)-p_L i(L)-p_R i(R)",
+      "i=\\text{Gini} \\text{ or Entropy}"
+    ],
+    "assumptions": [
+      "Axis-aligned splits capture structure"
+    ],
+    "constraints": [],
+    "variants": [
+      "CART",
+      "C4.5",
+      "CHAID"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "max_depth",
+      "type": "int",
+      "default": null,
+      "tips": "Limit to prevent overfitting"
+    },
+    {
+      "name": "min_samples_leaf",
+      "type": "int",
+      "default": 1,
+      "tips": "Increase for smoother trees"
+    }
+  ],
+  "data_requirements": {
+    "input": "Categorical or continuous features; Minimal preprocessing",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.tree import DecisionTreeClassifier, plot_tree\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = DecisionTreeClassifier(max_depth=3).fit(X,y)\n\nplt.figure(figsize=(6,4))\nplot_tree(model, filled=True, feature_names=['x1','x2'])\nplt.savefig('output.png')\nprint('Prediction for [1,1]:', model.predict([[1,1]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Preprocess features (handle categoricals)",
+      "Choose criterion (gini/entropy)",
+      "Tune depth/leaves via CV",
+      "Prune or use min_cost_complexity_pruning"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "Gini/Entropy",
+      "MAE/MSE (regression)"
+    ],
+    "validation": "Stratified CV with early stopping on validation score",
+    "baselines": [
+      "Logistic Regression (classification)",
+      "Linear Regression (regression)"
+    ]
+  },
+  "strengths": [
+    "Interpretable",
+    "Captures nonlinearity and interactions"
+  ],
+  "weaknesses": [
+    "Prone to overfitting",
+    "Unstable to small changes"
+  ],
+  "pitfalls": [
+    "Overfitting without constraints",
+    "Instability to small data changes"
+  ],
+  "comparisons": [
+    {
+      "with": "Random Forest",
+      "differences": [
+        "RF averages many trees to reduce variance at cost of interpretability"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Tree plot",
+    "feature importance",
+    "Tree diagram",
+    "Feature importance"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Decision_tree_learning",
+      "url": "https://en.wikipedia.org/wiki/Decision_tree_learning",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/tree.html",
+      "url": "https://scikit-learn.org/stable/modules/tree.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "graphviz"
+  ],
+  "last_updated": "2025-08-24"
+}

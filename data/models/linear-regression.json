@@ -1,0 +1,128 @@
+{
+  "id": "linear-regression",
+  "name": "Linear Regression",
+  "aliases": [],
+  "category": "Regression",
+  "tags": [
+    "regression",
+    "ols",
+    "supervised"
+  ],
+  "level": "beginner",
+  "summary": "Fits a linear mapping from features to a continuous target using ordinary least squares; a fast, interpretable baseline.",
+  "app_scenarios": [
+    "House price prediction",
+    "Sales forecasting",
+    "Exam score prediction"
+  ],
+  "math": {
+    "core_formula": "\\hat{\\beta} = (X^\\top X)^{-1} X^\\top y, \\quad \\hat{y} = X\\hat{\\beta}",
+    "derivation": [
+      "J(\\beta)=\\|y-X\\beta\\|_2^2",
+      "\\nabla_\\beta J=-2X^\\top(y-X\\beta)=0",
+      "\\Rightarrow X^\\top X\\hat\\beta=X^\\top y",
+      "\\hat\\beta=(X^\\top X)^{-1}X^\\top y"
+    ],
+    "assumptions": [
+      "Linearity of expectation E[y|X]=Xβ",
+      "Independence of errors",
+      "Homoskedasticity Var(ε|X)=σ²I",
+      "No perfect multicollinearity",
+      "Normal errors for inference"
+    ],
+    "constraints": [],
+    "variants": [
+      "Multiple Linear Regression",
+      "Ridge",
+      "Lasso",
+      "Elastic Net"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Continuous target; Approximate linear relation; Low multicollinearity",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.linear_model import LinearRegression\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1],[2],[3],[4],[5]])\ny = np.array([1.2,2.4,2.9,4.2,5.1])\n\nmodel = LinearRegression().fit(X,y)\n\nplt.scatter(X, y, color='blue', label='Data')\nplt.plot(X, model.predict(X), color='red', label='Regression Line')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Explore data; check linearity/outliers",
+      "Split train/test; optionally K-fold CV",
+      "Encode categoricals; standardize if using regularization",
+      "Fit OLS; examine coefficients",
+      "Diagnostics: residual vs fitted, QQ-plot, VIF"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MSE",
+      "RMSE",
+      "R²"
+    ],
+    "validation": "5-fold cross-validation with shuffle; use stratified bins if target heavily skewed",
+    "baselines": [
+      "Mean predictor (always predict ȳ)"
+    ]
+  },
+  "strengths": [
+    "Simple and interpretable",
+    "Fast to train",
+    "Provides coefficient insights"
+  ],
+  "weaknesses": [
+    "Assumes linearity",
+    "Sensitive to outliers",
+    "Multicollinearity issues"
+  ],
+  "pitfalls": [
+    "Using R² alone on non-comparable datasets",
+    "Ignoring correlated errors/time series structure",
+    "Extrapolating far outside training range"
+  ],
+  "comparisons": [
+    {
+      "with": "Ridge",
+      "differences": [
+        "Ridge trades variance for bias via L2; better with multicollinearity"
+      ]
+    },
+    {
+      "with": "Lasso",
+      "differences": [
+        "Lasso performs feature selection via sparsity; OLS does not"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Scatter plot with regression line",
+    "residual plot",
+    "Residuals vs fitted",
+    "QQ-plot of residuals",
+    "Coefficient bar chart"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Linear_regression",
+      "url": "https://en.wikipedia.org/wiki/Linear_regression",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares",
+      "url": "https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "statsmodels",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

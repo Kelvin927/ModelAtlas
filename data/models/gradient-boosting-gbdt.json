@@ -1,0 +1,119 @@
+{
+  "id": "gradient-boosting-gbdt",
+  "name": "Gradient Boosting (GBDT)",
+  "aliases": [],
+  "category": "Ensemble",
+  "tags": [
+    "boosting",
+    "ensemble"
+  ],
+  "level": "beginner",
+  "summary": "Sequentially fits weak learners to residuals; flexible and accurate but requires careful tuning.",
+  "app_scenarios": [
+    "Tabular regression",
+    "Ranking"
+  ],
+  "math": {
+    "core_formula": "F_m(x) = F_{m-1}(x) + \\nu h_m(x), \\; h_m = \\arg\\min_h \\sum L(y_i, F_{m-1}(x_i) + h(x_i))",
+    "derivation": [
+      "Initialize F_0(x)=\\arg\\min_\\gamma \\sum L(y_i,\\gamma)",
+      "For m=1..M: fit h_m to negative gradients",
+      "Update F_m=F_{m-1}+\\nu \\rho h_m"
+    ],
+    "assumptions": [
+      "Additive models with small learning rate improve generalization"
+    ],
+    "constraints": [],
+    "variants": [
+      "XGBoost",
+      "LightGBM",
+      "CatBoost"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "n_estimators",
+      "type": "int",
+      "default": 100,
+      "tips": "Increase with smaller learning rate"
+    },
+    {
+      "name": "learning_rate",
+      "type": "float",
+      "default": 0.1,
+      "tips": "Lower values need more trees"
+    },
+    {
+      "name": "max_depth",
+      "type": "int",
+      "default": 3,
+      "tips": "Shallow trees as weak learners"
+    }
+  ],
+  "data_requirements": {
+    "input": "Feature scaling optional; Careful tuning of learning rate/trees",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.ensemble import GradientBoostingRegressor\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1],[2],[3],[4]])\ny = np.array([1.2,1.9,3.2,4.1])\n\nmodel = GradientBoostingRegressor().fit(X,y)\n\nx_range = np.linspace(1,4,100).reshape(-1,1)\nplt.scatter(X,y,color='blue',label='Data')\nplt.plot(x_range, model.predict(x_range), color='red', label='GBDT Fit')\nplt.legend()\nplt.savefig('output.png')\nprint('Prediction for [2.5]:', model.predict([[2.5]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Scale optional",
+      "Tune learning_rate vs n_estimators tradeoff",
+      "Early stopping with validation set",
+      "Use subsample<1.0 for stochastic boosting"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MSE/RMSE",
+      "MAE",
+      "R²"
+    ],
+    "validation": "Train/validation split with early stopping",
+    "baselines": [
+      "Random Forest"
+    ]
+  },
+  "strengths": [
+    "High accuracy",
+    "Handles nonlinearity"
+  ],
+  "weaknesses": [
+    "Sensitive to hyperparameters",
+    "Longer training time"
+  ],
+  "pitfalls": [
+    "Too large learning rate causes overfit",
+    "Insensitive to monotonic constraints unless supported"
+  ],
+  "comparisons": [
+    {
+      "with": "XGBoost",
+      "differences": [
+        "XGBoost adds regularization, column/block structure, and advanced split finding"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Feature importance",
+    "SHAP values",
+    "Training/validation loss curve"
+  ],
+  "references": [
+    {
+      "title": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-tree-boosting",
+      "url": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-tree-boosting",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

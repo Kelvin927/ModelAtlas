@@ -1,0 +1,119 @@
+{
+  "id": "support-vector-machine-svm",
+  "name": "Support Vector Machine (SVM)",
+  "aliases": [],
+  "category": "Classification/Regression",
+  "tags": [
+    "svm",
+    "kernel",
+    "max-margin"
+  ],
+  "level": "beginner",
+  "summary": "Maximum-margin classifier/regressor with kernel trick for non-linear decision boundaries.",
+  "app_scenarios": [
+    "Text classification",
+    "Image classification",
+    "Anomaly detection (one-class SVM)"
+  ],
+  "math": {
+    "core_formula": "\\min_{w,b} \\frac{1}{2}\\lVert w \\rVert^2 \\; s.t. \\; y_i(w^T x_i + b) \\ge 1",
+    "derivation": [
+      "\\min_{w,b}\\frac12\\|w\\|^2 + C\\sum \\xi_i",
+      "y_i(w^\\top x_i+b)\\ge 1-\\xi_i, \\xi_i\\ge0",
+      "Kernelize via K(x_i,x_j)"
+    ],
+    "assumptions": [
+      "Classes roughly separable in a suitable kernel space"
+    ],
+    "constraints": [],
+    "variants": [
+      "LinearSVC",
+      "SVR",
+      "One-Class SVM"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "C",
+      "type": "float",
+      "default": 1.0,
+      "tips": "Higher C reduces margin violations (risk overfit)"
+    },
+    {
+      "name": "gamma",
+      "type": "float",
+      "default": "scale",
+      "tips": "RBF width; search log-scale"
+    }
+  ],
+  "data_requirements": {
+    "input": "Feature scaling; Reasonable C and gamma",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.svm import SVC\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = SVC(kernel='rbf', probability=True).fit(X,y)\n\nxx, yy = np.meshgrid(np.linspace(-0.5,1.5,100), np.linspace(-0.5,1.5,100))\nZ = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)\n\nplt.contourf(xx, yy, Z, alpha=0.3)\nplt.scatter(X[:,0], X[:,1], c=y, edgecolor='k')\nplt.title('SVM Decision Boundary')\nplt.savefig('output.png')\nprint('Support Vectors:', model.support_vectors_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Standardize features",
+      "Choose kernel (linear/RBF/poly)",
+      "Grid-search C,gamma with stratified CV",
+      "Inspect support vectors"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "F1",
+      "ROC-AUC"
+    ],
+    "validation": "Stratified CV for classification; nested CV for kernel selection",
+    "baselines": [
+      "Logistic Regression (linear)"
+    ]
+  },
+  "strengths": [
+    "Effective in high dimensions",
+    "Kernel trick for nonlinearity"
+  ],
+  "weaknesses": [
+    "Slower on large datasets",
+    "Needs careful kernel/parameter choice"
+  ],
+  "pitfalls": [
+    "Scaling mandatory",
+    "Large N leads to slow training"
+  ],
+  "comparisons": [
+    {
+      "with": "Logistic Regression",
+      "differences": [
+        "SVM focuses on margin; LR on probability modeling"
+      ]
+    }
+  ],
+  "visualizations": [
+    "2D decision boundary",
+    "support vectors"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Support_vector_machine",
+      "url": "https://en.wikipedia.org/wiki/Support_vector_machine",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/svm.html",
+      "url": "https://scikit-learn.org/stable/modules/svm.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

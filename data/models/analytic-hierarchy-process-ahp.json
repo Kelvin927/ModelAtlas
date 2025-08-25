@@ -1,0 +1,106 @@
+{
+  "id": "analytic-hierarchy-process-ahp",
+  "name": "Analytic Hierarchy Process (AHP)",
+  "aliases": [],
+  "category": "Multi-criteria Decision Making",
+  "tags": [
+    "ahp",
+    "mcdm",
+    "decision-making"
+  ],
+  "level": "beginner",
+  "summary": "Pairwise-judgment method for multi-criteria decisions; derives criterion weights via principal eigenvector and checks consistency.",
+  "app_scenarios": [
+    "Supplier selection",
+    "Site selection",
+    "Project prioritization"
+  ],
+  "math": {
+    "core_formula": "w = \\text{principal eigenvector of the pairwise comparison matrix},\\; CI = \\frac{\\lambda_{max}-n}{n-1},\\; CR = \\frac{CI}{RI}",
+    "derivation": [
+      "A\\mathbf{w}=\\lambda_{\\max}\\mathbf{w}",
+      "CI=(\\lambda_{\\max}-n)/(n-1)",
+      "CR=CI/RI"
+    ],
+    "assumptions": [
+      "Reciprocal and positive pairwise matrix",
+      "Judgments are reasonably consistent (CR<0.1)"
+    ],
+    "constraints": [],
+    "variants": [
+      "Fuzzy AHP",
+      "ANP (Analytic Network Process)"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Consistent pairwise comparisons; Reasonable CR (e.g., < 0.1)",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "import numpy as np\nimport matplotlib.pyplot as plt\n\nA = np.array([[1, 1/3, 3], [3, 1, 5], [1/3, 1/5, 1]])\nvals, vecs = np.linalg.eig(A)\nmax_idx = np.argmax(vals.real)\nw = np.abs(vecs[:, max_idx].real)\nw /= w.sum()\n\nplt.bar(range(len(w)), w, tick_label=[\"C1\",\"C2\",\"C3\"])\nplt.ylabel('Weight')\nplt.title('AHP Weights')\nplt.savefig('output.png')\nprint('weights=', w)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Define hierarchy",
+      "Construct pairwise matrices",
+      "Compute w via eigenvector or geometric mean",
+      "Check CR; revise if needed",
+      "Aggregate scores and rank"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Consistency Ratio (CR)",
+      "Sensitivity analysis"
+    ],
+    "validation": "Sensitivity test on weights/criteria",
+    "baselines": [
+      "Equal weights",
+      "TOPSIS weights"
+    ]
+  },
+  "strengths": [
+    "Intuitive pairwise comparisons",
+    "Consistency check via CR"
+  ],
+  "weaknesses": [
+    "Subjective input",
+    "Rank reversal issues"
+  ],
+  "pitfalls": [
+    "Inconsistency (high CR)",
+    "Rank reversal",
+    "Scale misuse (Saaty scale not followed)"
+  ],
+  "comparisons": [
+    {
+      "with": "TOPSIS",
+      "differences": [
+        "AHP derives weights; TOPSIS ranks alternatives by distance to ideal"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Hierarchy tree",
+    "weight bar charts",
+    "Hierarchy diagram",
+    "Weight bar chart"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Analytic_hierarchy_process",
+      "url": "https://en.wikipedia.org/wiki/Analytic_hierarchy_process",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

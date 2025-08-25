@@ -1,0 +1,115 @@
+{
+  "id": "lasso-regression",
+  "name": "Lasso Regression",
+  "aliases": [],
+  "category": "Regression",
+  "tags": [
+    "regression",
+    "l1",
+    "feature-selection"
+  ],
+  "level": "beginner",
+  "summary": "OLS with L1 penalty that yields sparse solutions and performs feature selection.",
+  "app_scenarios": [
+    "Feature selection",
+    "Sparse models"
+  ],
+  "math": {
+    "core_formula": "\\hat{\\beta} = \\arg\\min_\\beta \\frac{1}{2n}\\lVert y - X\\beta \\rVert_2^2 + \\alpha \\lVert \\beta \\rVert_1",
+    "derivation": [
+      "J(\\beta)=\\frac{1}{2n}\\|y-X\\beta\\|_2^2+\\alpha\\|\\beta\\|_1",
+      "Optimize via coordinate descent / LARS"
+    ],
+    "assumptions": [
+      "Features standardized",
+      "Some coefficients are truly zero or near-zero"
+    ],
+    "constraints": [],
+    "variants": [
+      "Elastic Net",
+      "Adaptive Lasso"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "alpha",
+      "type": "float",
+      "default": 0.1,
+      "range": "[0,+inf)",
+      "tips": "Use CV to pick alpha; warm-start helps"
+    }
+  ],
+  "data_requirements": {
+    "input": "Continuous target; Feature scaling strongly recommended",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.linear_model import Lasso\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.random.randn(100, 1)\ny = 3*X[:,0] + np.random.randn(100)*0.5\n\nmodel = Lasso(alpha=0.1).fit(X,y)\n\nplt.scatter(X,y,color='blue',alpha=0.5,label='Data')\nx_range = np.linspace(X.min(), X.max(), 100).reshape(-1,1)\nplt.plot(x_range, model.predict(x_range), color='red', label='Lasso Fit')\nplt.xlabel('X')\nplt.ylabel('y')\nplt.legend()\nplt.savefig('output.png')\nprint('coef=', model.coef_, 'intercept=', model.intercept_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Standardize features",
+      "Use cross-validated Lasso (LassoCV)",
+      "Stability-check selected features across folds"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MSE",
+      "R²",
+      "Number of selected features"
+    ],
+    "validation": "K-fold CV using MSE/R²",
+    "baselines": [
+      "Ridge",
+      "OLS"
+    ]
+  },
+  "strengths": [
+    "Automatic variable selection",
+    "Improves interpretability"
+  ],
+  "weaknesses": [
+    "Unstable with correlated features",
+    "Bias in large coefficients"
+  ],
+  "pitfalls": [
+    "Unstable selection under strong collinearity",
+    "Bias for large true coefficients"
+  ],
+  "comparisons": [
+    {
+      "with": "Elastic Net",
+      "differences": [
+        "Elastic Net stabilizes selection under collinearity via L2"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Lasso path (coefficients vs regularization)",
+    "Regularization path",
+    "Non-zero count vs alpha"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Lasso_(statistics)",
+      "url": "https://en.wikipedia.org/wiki/Lasso_(statistics)",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/linear_model.html#lasso",
+      "url": "https://scikit-learn.org/stable/modules/linear_model.html#lasso",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn",
+    "numpy",
+    "pandas"
+  ],
+  "last_updated": "2025-08-24"
+}

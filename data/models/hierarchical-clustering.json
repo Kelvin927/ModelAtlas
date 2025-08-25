@@ -1,0 +1,98 @@
+{
+  "id": "hierarchical-clustering",
+  "name": "Hierarchical Clustering",
+  "aliases": [],
+  "category": "Clustering",
+  "tags": [
+    "clustering",
+    "hierarchical"
+  ],
+  "level": "beginner",
+  "summary": "Builds a dendrogram via linkage; flexible choice of distance/linkage with tree cut to form clusters.",
+  "app_scenarios": [
+    "Gene expression clustering",
+    "Document clustering"
+  ],
+  "math": {
+    "core_formula": "Linkage criteria: single, complete, average, ward; distance updated per Lance–Williams formula.",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "Agglomerative",
+      "Divisive",
+      "Ward"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Distance metric choice; Optional scaling",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.cluster import AgglomerativeClustering\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.cluster.hierarchy import dendrogram, linkage\n\nX = np.array([[1,2],[1,4],[1,0],[10,2],[10,4],[10,0]])\n\nZ = linkage(X, 'ward')\nplt.figure(figsize=(6,4))\ndendrogram(Z)\nplt.title('Hierarchical Clustering Dendrogram')\nplt.savefig('output.png')\n\nmodel = AgglomerativeClustering(n_clusters=2).fit(X)\nprint('Labels:', model.labels_)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Choose distance and linkage",
+      "Compute condensed distance matrix (watch O(n^2))",
+      "Plot dendrogram and decide cut"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Cophenetic correlation",
+      "Silhouette score"
+    ],
+    "validation": "Cophenetic correlation vs original distances",
+    "baselines": [
+      "K-Means"
+    ]
+  },
+  "strengths": [
+    "Dendrogram insight",
+    "No need to predefine k (can cut tree)"
+  ],
+  "weaknesses": [
+    "O(n^2) memory/time",
+    "Sensitive to linkage choice"
+  ],
+  "pitfalls": [
+    "Quadratic memory/time on large n",
+    "Linkage choice changes results"
+  ],
+  "comparisons": [
+    {
+      "with": "K-Means",
+      "differences": [
+        "No need to predefine k; provides multi-scale structure"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Dendrogram",
+    "distance heatmap",
+    "Heatmap of distances"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Hierarchical_clustering",
+      "url": "https://en.wikipedia.org/wiki/Hierarchical_clustering",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering",
+      "url": "https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scipy",
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

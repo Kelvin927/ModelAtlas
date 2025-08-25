@@ -1,0 +1,120 @@
+{
+  "id": "random-forest",
+  "name": "Random Forest",
+  "aliases": [],
+  "category": "Ensemble",
+  "tags": [
+    "ensemble",
+    "bagging",
+    "tree"
+  ],
+  "level": "beginner",
+  "summary": "Bagging of decision trees with feature randomness; strong, robust baseline on tabular data.",
+  "app_scenarios": [
+    "Tabular classification",
+    "Feature importance analysis"
+  ],
+  "math": {
+    "core_formula": "\\hat{f}(x) = \\frac{1}{B} \\sum_{b=1}^B T_b(x)",
+    "derivation": [
+      "Bootstrap sample each tree",
+      "Random subset of features per split",
+      "Averaging reduces variance"
+    ],
+    "assumptions": [
+      "Trees are high-variance learners; bagging helps"
+    ],
+    "constraints": [],
+    "variants": [
+      "Extremely Randomized Trees",
+      "Isolation Forest"
+    ]
+  },
+  "hyperparameters": [
+    {
+      "name": "n_estimators",
+      "type": "int",
+      "default": 200,
+      "tips": "Increase for stability until OOB converges"
+    },
+    {
+      "name": "max_depth",
+      "type": "int",
+      "default": null,
+      "tips": "Control overfitting"
+    }
+  ],
+  "data_requirements": {
+    "input": "Little feature engineering; Handle missing with care",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from sklearn.ensemble import RandomForestClassifier\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[0,0],[1,1],[0,1],[1,0]])\ny = np.array([0,1,1,0])\n\nmodel = RandomForestClassifier(n_estimators=50).fit(X,y)\n\nimportances = model.feature_importances_\nplt.bar(['x1','x2'], importances)\nplt.ylabel('Importance')\nplt.title('Feature Importance (RF)')\nplt.savefig('output.png')\nprint('Prediction for [1,0]:', model.predict([[1,0]]))",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Set n_estimators (≥200)",
+      "Tune max_depth/min_samples_leaf",
+      "Use OOB score for quick validation",
+      "Inspect permutation importance/SHAP"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "Accuracy",
+      "OOB score",
+      "ROC-AUC"
+    ],
+    "validation": "OOB + held-out test",
+    "baselines": [
+      "Single Decision Tree"
+    ]
+  },
+  "strengths": [
+    "Strong baseline",
+    "Robust to overfitting",
+    "Handles mixed features"
+  ],
+  "weaknesses": [
+    "Less interpretable than a single tree",
+    "Larger models"
+  ],
+  "pitfalls": [
+    "Data leakage via target encoding in CV",
+    "Bias against rare categories unless encoded"
+  ],
+  "comparisons": [
+    {
+      "with": "Gradient Boosting",
+      "differences": [
+        "RF reduces variance; boosting reduces bias via sequential fitting"
+      ]
+    }
+  ],
+  "visualizations": [
+    "Feature importance",
+    "partial dependence plots",
+    "Permutation importance",
+    "Partial dependence"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Random_forest",
+      "url": "https://en.wikipedia.org/wiki/Random_forest",
+      "type": "docs"
+    },
+    {
+      "title": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+      "url": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "scikit-learn"
+  ],
+  "last_updated": "2025-08-24"
+}

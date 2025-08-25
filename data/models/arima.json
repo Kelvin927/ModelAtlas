@@ -1,0 +1,105 @@
+{
+  "id": "arima",
+  "name": "ARIMA",
+  "aliases": [],
+  "category": "Time Series",
+  "tags": [
+    "time-series",
+    "forecasting",
+    "arima"
+  ],
+  "level": "beginner",
+  "summary": "Classical linear model for differenced stationary series combining autoregression and moving average components.",
+  "app_scenarios": [
+    "Demand forecasting",
+    "Econometrics"
+  ],
+  "math": {
+    "core_formula": "\\phi(B)(1-B)^d y_t = \\theta(B)\\varepsilon_t",
+    "derivation": [],
+    "assumptions": [],
+    "constraints": [],
+    "variants": [
+      "SARIMA",
+      "ARIMAX"
+    ]
+  },
+  "hyperparameters": [],
+  "data_requirements": {
+    "input": "Stationarity (after differencing); ACF/PACF diagnostics",
+    "scale_sensitivity": "",
+    "missing_values": ""
+  },
+  "code": {
+    "python_sklearn": "from statsmodels.tsa.arima.model import ARIMA\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ns = pd.Series([1,2,3,4,5,6,7,8,9,10])\n\nmodel = ARIMA(s, order=(1,1,1)).fit()\nforecast = model.forecast(5)\n\nplt.plot(s, label='Data')\nplt.plot(range(len(s), len(s)+5), forecast, label='Forecast', color='red')\nplt.legend()\nplt.title('ARIMA Forecast')\nplt.savefig('output.png')\nprint(forecast)",
+    "python_statsmodels": "",
+    "python_pytorch": ""
+  },
+  "usage": {
+    "workflow": [
+      "Check stationarity (ADF/KPSS)",
+      "Difference until stationary (d)",
+      "Use ACF/PACF to suggest p,q",
+      "Fit ARIMA(p,d,q), validate residual whiteness",
+      "Forecast with intervals"
+    ],
+    "examples": []
+  },
+  "evaluation": {
+    "metrics": [
+      "MAE",
+      "RMSE",
+      "MAPE",
+      "AIC/BIC"
+    ],
+    "validation": "Time-series CV (rolling origin)",
+    "baselines": [
+      "Naive (random walk)",
+      "Seasonal naive"
+    ]
+  },
+  "strengths": [
+    "Classical, interpretable",
+    "Good for short-term stationary series"
+  ],
+  "weaknesses": [
+    "Needs stationarity",
+    "Limited for complex seasonality"
+  ],
+  "pitfalls": [
+    "Mis-specification without stationarity check",
+    "Ignoring seasonality -> use SARIMA"
+  ],
+  "comparisons": [
+    {
+      "with": "Prophet",
+      "differences": [
+        "ARIMA is linear and requires stationarity; Prophet handles trend/seasonality explicitly"
+      ]
+    }
+  ],
+  "visualizations": [
+    "ACF/PACF plots",
+    "forecast vs actual",
+    "ACF/PACF",
+    "Forecast vs actual"
+  ],
+  "references": [
+    {
+      "title": "https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average",
+      "url": "https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average",
+      "type": "docs"
+    },
+    {
+      "title": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
+      "url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
+      "type": "docs"
+    }
+  ],
+  "related": [
+    "statsmodels",
+    "pandas",
+    "numpy"
+  ],
+  "last_updated": "2025-08-24"
+}

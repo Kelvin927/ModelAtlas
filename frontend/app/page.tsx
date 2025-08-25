@@ -7,11 +7,13 @@ interface Model {
   id: string;
   name?: string;
   category?: string;
+  summary?: string;
   description?: string;
   tags?: string[];
+  last_updated?: string;
 }
 
-/** Highlight matching search text */
+/** 高亮匹配的搜索内容 */
 function highlightText(text: string | undefined, query: string) {
   if (!text) return "";
   if (!query) return text;
@@ -39,15 +41,17 @@ export default function HomePage() {
   const [jumpPage, setJumpPage] = useState("");
   const modelsPerPage = 9;
 
-  // Fetch models from backend
+  // 从后端获取模型
   useEffect(() => {
     async function fetchModels() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/models");
+        const res = await fetch("http://127.0.0.1:8000/models", { cache: "no-store" });
         const data = await res.json();
-        setModels(data);
+        const arr = Array.isArray(data) ? data : data.models; // 兼容
+        setModels(arr || []);
       } catch (error) {
         console.error("Failed to load models:", error);
+        setModels([]);
       } finally {
         setLoading(false);
       }
@@ -55,15 +59,15 @@ export default function HomePage() {
     fetchModels();
   }, []);
 
-  // Extract unique categories
+  // 提取唯一类别
   const categories = ["All", ...new Set(models.map((m) => m.category || "Uncategorized"))];
 
-  // Apply search and category filters
+  // 搜索 + 分类过滤
   const filteredModels = models.filter((m) => {
     const q = search.toLowerCase();
-
     const matchesSearch =
       (m.name?.toLowerCase() || "").includes(q) ||
+      (m.summary?.toLowerCase() || "").includes(q) ||
       (m.description?.toLowerCase() || "").includes(q) ||
       (m.tags || []).some((tag) => (tag?.toLowerCase() || "").includes(q));
 
@@ -73,17 +77,17 @@ export default function HomePage() {
     return matchesSearch && matchesCategory;
   });
 
-  // Pagination logic
+  // 分页逻辑
   const totalPages = Math.ceil(filteredModels.length / modelsPerPage);
   const startIndex = (currentPage - 1) * modelsPerPage;
   const currentModels = filteredModels.slice(startIndex, startIndex + modelsPerPage);
 
-  // Reset to first page when filters change
+  // 当搜索或分类变化时重置页码
   useEffect(() => {
     setCurrentPage(1);
   }, [search, categoryFilter]);
 
-  // Handle page jump input
+  // 跳页
   const handleJumpPage = (e: React.FormEvent) => {
     e.preventDefault();
     const pageNum = parseInt(jumpPage, 10);
@@ -93,10 +97,9 @@ export default function HomePage() {
     setJumpPage("");
   };
 
-  // Generate pagination buttons with ellipsis
+  // 页码按钮
   const getPagination = () => {
     const pages: (number | string)[] = [];
-
     if (totalPages <= 7) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
@@ -117,7 +120,7 @@ export default function HomePage() {
         <p>Loading models...</p>
       ) : (
         <>
-          {/* Search and category filter */}
+          {/* 搜索 + 分类过滤 */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
             <input
               type="text"
@@ -139,7 +142,7 @@ export default function HomePage() {
             </select>
           </div>
 
-          {/* Model cards */}
+          {/* 模型卡片 */}
           {currentModels.length === 0 ? (
             <p className="text-gray-500">No models found.</p>
           ) : (
@@ -157,7 +160,7 @@ export default function HomePage() {
                     Category: {highlightText(model.category, search)}
                   </p>
                   <p className="text-gray-700 mb-3">
-                    {highlightText(model.description, search)}
+                    {highlightText(model.summary || model.description, search)}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {(model.tags || []).map((tag, idx) => (
@@ -169,15 +172,19 @@ export default function HomePage() {
                       </span>
                     ))}
                   </div>
+                  {model.last_updated && (
+                    <p className="text-xs text-gray-500 mt-2">
+                      Updated: {model.last_updated}
+                    </p>
+                  )}
                 </Link>
               ))}
             </div>
           )}
 
-          {/* Pagination controls */}
+          {/* 分页 */}
           {totalPages > 1 && (
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-              {/* Numbered pagination with ellipsis */}
               <div className="flex gap-2 flex-wrap">
                 {getPagination().map((p, idx) =>
                   typeof p === "number" ? (
@@ -199,8 +206,6 @@ export default function HomePage() {
                   )
                 )}
               </div>
-
-              {/* Jump to page input */}
               <form onSubmit={handleJumpPage} className="flex items-center gap-2">
                 <input
                   type="number"
