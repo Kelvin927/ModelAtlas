@@ -43,7 +43,8 @@ export default function ModelDetail() {
       if (!id) return;
       setLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:8000/models/${id}`, { cache: "no-store" });
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const res = await fetch(`${API_BASE}/models`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Model = await res.json();
         setModel(data);

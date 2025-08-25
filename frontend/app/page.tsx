@@ -45,7 +45,8 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchModels() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/models", { cache: "no-store" });
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
+        const res = await fetch(`${API_BASE}/models`, { cache: "no-store" });
         const data = await res.json();
         const arr = Array.isArray(data) ? data : data.models; // 兼容
         setModels(arr || []);
