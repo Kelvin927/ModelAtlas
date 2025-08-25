@@ -49,8 +49,24 @@
     "scale_sensitivity": "",
     "missing_values": ""
   },
+  "required_columns": [
+    {
+      "role": "feature_x",
+      "canonical": "x",
+      "aliases": ["x", "X", "feat_x", "lon", "longitude"],
+      "dtype": "number",
+      "description": "First numeric feature for clustering"
+    },
+    {
+      "role": "feature_y",
+      "canonical": "y",
+      "aliases": ["y", "Y", "feat_y", "lat", "latitude"],
+      "dtype": "number",
+      "description": "Second numeric feature for clustering"
+    }
+  ],
   "code": {
-    "python_sklearn": "from sklearn.cluster import KMeans\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nX = np.array([[1,2],[1,4],[1,0],[10,2],[10,4],[10,0]])\n\nmodel = KMeans(n_clusters=2, n_init=10).fit(X)\n\nplt.scatter(X[:,0],X[:,1],c=model.labels_,cmap='viridis')\nplt.scatter(model.cluster_centers_[:,0], model.cluster_centers_[:,1], c='red', marker='x')\nplt.title('K-Means Clustering')\nplt.savefig('output.png')\nprint('Cluster centers:', model.cluster_centers_)",
+    "python_sklearn": "from sklearn.cluster import KMeans\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# ✅ Always read uploaded CSV as data.csv\ndf = pd.read_csv('data.csv')\nX = df[['x','y']].values\n\nmodel = KMeans(n_clusters=2, n_init=10).fit(X)\n\nplt.scatter(X[:,0], X[:,1], c=model.labels_, cmap='viridis')\nplt.scatter(model.cluster_centers_[:,0], model.cluster_centers_[:,1], c='red', marker='x')\nplt.title('K-Means Clustering (from CSV)')\nplt.savefig('output.png')\n\nprint('Cluster centers:', model.cluster_centers_)\n\ndf['cluster'] = model.labels_\ndf.to_csv('clustered.csv', index=False)",
     "python_statsmodels": "",
     "python_pytorch": ""
   },

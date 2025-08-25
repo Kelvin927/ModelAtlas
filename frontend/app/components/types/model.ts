@@ -25,6 +25,15 @@ export interface UsageExample {
   expected_output?: string;
 }
 
+export interface RequiredColumn {
+  role?: string;                // semantic role, e.g. "feature_x"
+  canonical?: string;           // canonical name script will use, e.g. "x"
+  name?: string;                // fallback for older JSONs
+  aliases?: string[];           // acceptable aliases, e.g. ["x","X","lon","longitude"]
+  dtype?: "number" | "string" | "integer";
+  description?: string;
+}
+
 export interface Model {
   id: string;
   name: string;
@@ -68,4 +77,5 @@ export interface Model {
   references?: Reference[];
   related?: string[];
   last_updated?: string;
+  required_columns?: RequiredColumn[];
 }

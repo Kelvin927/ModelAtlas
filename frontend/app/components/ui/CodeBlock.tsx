@@ -1,5 +1,6 @@
 "use client";
 import CopyButton from "./CopyButton";
+import UploadButton from "./UploadButton";
 
 export default function CodeBlock({
   code,
@@ -7,12 +8,14 @@ export default function CodeBlock({
   running,
   language = "python",
   setCode,
+  onUpload,
 }: {
   code: string;
   onRun?: () => void;
   running?: boolean;
   language?: string;
   setCode?: (val: string) => void;
+  onUpload?: (files: File[]) => void; // <-- File[]
 }) {
   return (
     <div className="rounded-lg overflow-hidden border border-gray-200 mb-3">
@@ -28,6 +31,14 @@ export default function CodeBlock({
             >
               {running ? "Running..." : "Run"}
             </button>
+          )}
+          {onUpload && (
+            <UploadButton
+              onFilesSelected={onUpload}
+              label="Upload CSV"
+              accept=".csv"
+              multiple
+            />
           )}
         </div>
       </div>
